@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediCare Pro | Pharmacy Management System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+/* ===================== CSS VARIABLES ===================== */
+:root{
+  --primary:#2563EB;
+  --primary-dark:#1D4ED8;
+  --primary-light:#EFF6FF;
+  --primary-glow:rgba(37,99,235,.16);
+  --emerald:#0EA678;
+  --emerald-light:#ECFDF5;
+  --amber:#F59E0B;
+  --amber-light:#FFFBEB;
+  --red:#E11D48;
+  --red-light:#FEF2F2;
+  --gray-50:#F8FAFC;
+  --gray-100:#F1F5F9;
+  --gray-200:#E5EAF1;
+  --gray-300:#D6DEE8;
+  --gray-400:#98A6BA;
+  --gray-500:#6B7A8F;
+  --gray-600:#475569;
+  --gray-700:#334155;
+  --gray-800:#1E293B;
+  --gray-900:#0F172A;
+  --white:#FFFFFF;
+  --bg:#F5F8FC;
+  --surface:#FFFFFF;
+  --text:#0F1B2D;
+  --text-soft:#64748B;
+  --border:#E7ECF3;
+  --radius-sm:10px;
+  --radius:16px;
+  --radius-lg:22px;
+  --shadow-sm:0 1px 3px rgba(15,32,64,.06);
+  --shadow:0 8px 24px rgba(15,32,64,.07);
+  --shadow-lg:0 16px 40px rgba(15,32,64,.12);
+  --sidebar-w:264px;
+  --sidebar-w-collapsed:84px;
+  --header-h:72px;
+  --transition:.22s cubic-bezier(.4,0,.2,1);
+}
+[data-theme="dark"]{
+  --bg:#0B1220;
+  --surface:#131C2E;
+  --text:#EAF0FB;
+  --text-soft:#94A3B8;
+  --border:#223049;
+  --gray-50:#182337;
+  --gray-100:#1B2740;
+  --gray-200:#243354;
+  --primary-light:#16233F;
+  --emerald-light:#0E2A24;
+  --amber-light:#2E2410;
+  --red-light:#301321;
+  --shadow-sm:0 1px 3px rgba(0,0,0,.3);
+  --shadow:0 8px 24px rgba(0,0,0,.35);
+  --shadow-lg:0 16px 40px rgba(0,0,0,.5);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  font-size:14.5px;
+  line-height:1.5;
+  overflow-x:hidden;
+  transition:background var(--transition),color var(--transition);
+}
+h1,h2,h3,h4,.brand-font{font-family:'Manrope',sans-serif;}
+a{text-decoration:none;color:inherit;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit;}
+input,select,textarea{font-family:inherit;color:inherit;}
+ul{list-style:none;}
+::-webkit-scrollbar{width:9px;height:9px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--gray-300);border-radius:10px;}
+[data-theme="dark"] ::-webkit-scrollbar-thumb{background:var(--gray-200);}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px;}
+
+/* ===================== APP SHELL ===================== */
+.app-shell{display:flex;min-height:100vh;}
+
+/* SIDEBAR */
+.sidebar{
+  width:var(--sidebar-w);
+  background:var(--surface);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;bottom:0;
+  z-index:100;
+  transition:width var(--transition), transform var(--transition);
+}
+.sidebar.collapsed{width:var(--sidebar-w-collapsed);}
+.sidebar-brand{
+  display:flex;align-items:center;gap:12px;
+  padding:22px 20px;border-bottom:1px solid var(--border);
+  min-height:var(--header-h);
+}
+.brand-mark{
+  width:38px;height:38px;border-radius:11px;flex-shrink:0;
+  background:linear-gradient(145deg,var(--primary),#1746b3);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-size:17px;
+  box-shadow:0 6px 14px var(--primary-glow);
+}
+.brand-text{display:flex;flex-direction:column;white-space:nowrap;overflow:hidden;transition:opacity var(--transition);}
+.brand-text strong{font-size:16.5px;font-weight:800;letter-spacing:-.2px;}
+.brand-text span{font-size:11px;color:var(--text-soft);font-weight:500;}
+.sidebar.collapsed .brand-text{opacity:0;width:0;}
+
+.sidebar-nav{flex:1;overflow-y:auto;padding:16px 12px;}
+.nav-section-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--text-soft);font-weight:700;padding:14px 12px 6px;}
+.sidebar.collapsed .nav-section-label{opacity:0;height:0;padding:6px 0 0;overflow:hidden;}
+.nav-item{
+  display:flex;align-items:center;gap:13px;
+  padding:10.5px 13px;border-radius:11px;margin-bottom:3px;
+  color:var(--text-soft);font-weight:600;font-size:13.7px;
+  position:relative;transition:background var(--transition),color var(--transition);
+  white-space:nowrap;overflow:hidden;
+}
+.nav-item i{width:19px;text-align:center;font-size:15px;flex-shrink:0;}
+.nav-item:hover{background:var(--gray-100);color:var(--text);}
+.nav-item.active{background:var(--primary-light);color:var(--primary-dark);}
+.nav-item.active::before{
+  content:'';position:absolute;left:-12px;top:50%;transform:translateY(-50%);
+  width:4px;height:20px;background:var(--primary);border-radius:0 4px 4px 0;
+}
+.nav-item .label{transition:opacity var(--transition);}
+.sidebar.collapsed .nav-item .label{opacity:0;width:0;}
+.nav-item .nav-badge{
+  margin-left:auto;background:var(--red);color:#fff;font-size:10.5px;font-weight:700;
+  padding:1.5px 6.5px;border-radius:20px;
+}
+.sidebar.collapsed .nav-badge{display:none;}
+
+.sidebar-footer{
+  border-top:1px solid var(--border);padding:14px 16px;
+  display:flex;align-items:center;gap:11px;
+}
+.founder-avatar{
+  width:38px;height:38px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(145deg,var(--emerald),#0a7d5c);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px;
+}
+.founder-info{overflow:hidden;white-space:nowrap;transition:opacity var(--transition);}
+.founder-info strong{display:block;font-size:13px;font-weight:700;}
+.founder-info span{font-size:11px;color:var(--text-soft);}
+.sidebar.collapsed .founder-info{opacity:0;width:0;}
+
+.sidebar-overlay{
+  display:none;position:fixed;inset:0;background:rgba(10,15,25,.5);z-index:90;
+  backdrop-filter:blur(2px);
+}
+.sidebar-overlay.show{display:block;}
+
+/* MAIN */
+.main-wrap{flex:1;margin-left:var(--sidebar-w);transition:margin var(--transition);min-width:0;}
+.main-wrap.collapsed{margin-left:var(--sidebar-w-collapsed);}
+
+/* HEADER */
+.topbar{
+  height:var(--header-h);background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 26px;position:sticky;top:0;z-index:60;
+  backdrop-filter:blur(10px);
+}
+.topbar-left{display:flex;align-items:center;gap:16px;min-width:0;}
+.icon-btn{
+  width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  color:var(--text-soft);font-size:16px;transition:background var(--transition),color var(--transition);
+  position:relative;flex-shrink:0;
+}
+.icon-btn:hover{background:var(--gray-100);color:var(--text);}
+.page-heading{min-width:0;}
+.page-heading h1{font-size:19px;font-weight:800;letter-spacing:-.3px;line-height:1.2;}
+.breadcrumb{font-size:12px;color:var(--text-soft);margin-top:2px;}
+.breadcrumb span{color:var(--primary);font-weight:600;}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.search-wrap{position:relative;display:flex;align-items:center;}
+.search-input{
+  width:230px;background:var(--gray-100);border:1px solid transparent;border-radius:11px;
+  padding:9.5px 14px 9.5px 36px;font-size:13px;color:var(--text);transition:var(--transition);
+}
+.search-input:focus{background:var(--surface);border-color:var(--primary);width:270px;}
+.search-wrap i{position:absolute;left:12px;color:var(--text-soft);font-size:13px;}
+.badge-dot{
+  position:absolute;top:7px;right:7px;width:8px;height:8px;border-radius:50%;
+  background:var(--red);border:2px solid var(--surface);
+}
+.user-chip{
+  display:flex;align-items:center;gap:9px;padding:6px 12px 6px 6px;border-radius:30px;
+  background:var(--gray-100);transition:var(--transition);
+}
+.user-chip:hover{background:var(--gray-200);}
+.user-avatar{
+  width:32px;height:32px;border-radius:50%;background:linear-gradient(145deg,var(--primary),#1746b3);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;
+}
+.user-chip span{font-size:13px;font-weight:700;}
+
+/* DROPDOWNS */
+.dropdown-panel{
+  position:absolute;top:calc(100% + 10px);right:0;background:var(--surface);
+  border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);
+  width:340px;opacity:0;visibility:hidden;transform:translateY(-8px) scale(.98);
+  transition:all .18s cubic-bezier(.4,0,.2,1);z-index:200;overflow:hidden;
+}
+.dropdown-panel.show{opacity:1;visibility:visible;transform:translateY(0) scale(1);}
+.dropdown-header{padding:15px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;}
+.dropdown-header strong{font-size:14px;}
+.dropdown-header a{font-size:12px;color:var(--primary);font-weight:600;}
+.dropdown-list{max-height:340px;overflow-y:auto;}
+.notif-item{display:flex;gap:12px;padding:13px 18px;border-bottom:1px solid var(--border);transition:background var(--transition);cursor:pointer;}
+.notif-item:last-child{border-bottom:none;}
+.notif-item:hover{background:var(--gray-50);}
+.notif-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;}
+.notif-text p{font-size:13px;font-weight:600;margin-bottom:2px;}
+.notif-text span{font-size:11.5px;color:var(--text-soft);}
+.user-dropdown .menu-item{display:flex;align-items:center;gap:11px;padding:11px 18px;font-size:13.3px;font-weight:600;transition:background var(--transition);}
+.user-dropdown .menu-item:hover{background:var(--gray-50);}
+.user-dropdown .menu-item i{width:16px;color:var(--text-soft);}
+.user-dropdown{width:220px;}
+.dropdown-divider{height:1px;background:var(--border);margin:4px 0;}
+
+/* CONTENT */
+.content{padding:26px;max-width:1600px;}
+.page{display:none;animation:fadeIn .35s ease;}
+.page.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* HERO */
+.hero-card{
+  background:linear-gradient(120deg,var(--primary) 0%,#1746b3 100%);
+  border-radius:var(--radius-lg);padding:30px 34px;color:#fff;
+  display:flex;justify-content:space-between;align-items:center;gap:24px;
+  margin-bottom:22px;position:relative;overflow:hidden;box-shadow:0 20px 40px var(--primary-glow);
+}
+.hero-card::after{content:'';position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:rgba(255,255,255,.08);}
+.hero-card h2{font-size:23px;font-weight:800;margin-bottom:6px;}
+.hero-card p{font-size:13.5px;opacity:.88;max-width:420px;}
+.hero-actions{display:flex;flex-direction:column;align-items:flex-end;gap:10px;position:relative;z-index:1;}
+.hero-date{font-size:12px;opacity:.85;background:rgba(255,255,255,.15);padding:6px 13px;border-radius:20px;}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:10.5px 18px;border-radius:11px;
+  font-size:13.3px;font-weight:700;transition:all .18s ease;white-space:nowrap;position:relative;overflow:hidden;
+}
+.btn-primary{background:var(--primary);color:#fff;box-shadow:0 8px 18px var(--primary-glow);}
+.btn-primary:hover{background:var(--primary-dark);transform:translateY(-1px);}
+.btn-white{background:#fff;color:var(--primary);}
+.btn-white:hover{transform:translateY(-1px);box-shadow:0 8px 16px rgba(0,0,0,.15);}
+.btn-outline{border:1px solid var(--border);color:var(--text);background:var(--surface);}
+.btn-outline:hover{background:var(--gray-50);}
+.btn-ghost{color:var(--text-soft);}
+.btn-ghost:hover{color:var(--text);background:var(--gray-100);}
+.btn-danger{background:var(--red);color:#fff;}
+.btn-danger:hover{filter:brightness(1.08);}
+.btn-sm{padding:7px 12px;font-size:12.3px;border-radius:9px;}
+.btn:active{transform:scale(.97);}
+
+/* GRID + KPI */
+.grid{display:grid;gap:18px;}
+.kpi-grid{grid-template-columns:repeat(6,1fr);margin-bottom:22px;}
+@media(max-width:1500px){.kpi-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:760px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+.kpi-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px;transition:transform var(--transition),box-shadow var(--transition);cursor:default;
+}
+.kpi-card:hover{transform:translateY(-3px);box-shadow:var(--shadow);}
+.kpi-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.kpi-icon{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.kpi-trend{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:20px;display:flex;align-items:center;gap:3px;}
+.trend-up{background:var(--emerald-light);color:var(--emerald);}
+.trend-warn{background:var(--amber-light);color:var(--amber);}
+.trend-down{background:var(--red-light);color:var(--red);}
+.kpi-value{font-size:25px;font-weight:800;letter-spacing:-.5px;margin-bottom:3px;}
+.kpi-label{font-size:12.5px;color:var(--text-soft);font-weight:500;}
+
+/* PANELS / CARDS */
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;margin-bottom:20px;}
+.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px;flex-wrap:wrap;gap:10px;}
+.panel-head h3{font-size:16px;font-weight:800;}
+.panel-head .sub{font-size:12px;color:var(--text-soft);margin-top:2px;}
+.chip-filter{display:flex;gap:6px;background:var(--gray-100);padding:4px;border-radius:10px;}
+.chip-filter button{padding:6px 13px;font-size:12px;font-weight:700;border-radius:8px;color:var(--text-soft);transition:var(--transition);}
+.chip-filter button.active{background:var(--surface);color:var(--primary);box-shadow:var(--shadow-sm);}
+
+.two-col{display:grid;grid-template-columns:1.6fr 1fr;gap:20px;}
+@media(max-width:1100px){.two-col{grid-template-columns:1fr;}}
+
+/* TABLE */
+.table-scroll{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13.2px;}
+thead th{
+  text-align:left;padding:11px 14px;color:var(--text-soft);font-weight:700;font-size:11.3px;
+  text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--border);white-space:nowrap;
+}
+tbody td{padding:13px 14px;border-bottom:1px solid var(--border);white-space:nowrap;}
+tbody tr{transition:background var(--transition);}
+tbody tr:hover{background:var(--gray-50);}
+tbody tr:last-child td{border-bottom:none;}
+.cell-main{font-weight:700;}
+.cell-sub{font-size:11.5px;color:var(--text-soft);}
+.badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:5px;}
+.badge-green{background:var(--emerald-light);color:var(--emerald);}
+.badge-amber{background:var(--amber-light);color:var(--amber);}
+.badge-red{background:var(--red-light);color:var(--red);}
+.badge-blue{background:var(--primary-light);color:var(--primary-dark);}
+.badge-gray{background:var(--gray-100);color:var(--text-soft);}
+.row-actions{display:flex;gap:6px;}
+.row-actions button{width:30px;height:30px;border-radius:8px;color:var(--text-soft);font-size:12.5px;}
+.row-actions button:hover{background:var(--gray-100);color:var(--primary);}
+.row-actions button.danger:hover{color:var(--red);}
+.stock-bar{width:70px;height:6px;background:var(--gray-200);border-radius:10px;overflow:hidden;margin-top:5px;}
+.stock-bar span{display:block;height:100%;border-radius:10px;}
+.pagination{display:flex;justify-content:space-between;align-items:center;margin-top:16px;font-size:12.5px;color:var(--text-soft);}
+.page-btns{display:flex;gap:5px;}
+.page-btns button{width:30px;height:30px;border-radius:8px;font-weight:700;}
+.page-btns button.active{background:var(--primary);color:#fff;}
+.page-btns button:not(.active):hover{background:var(--gray-100);}
+
+/* toolbar */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;align-items:center;}
+.toolbar .search-input{width:240px;background:var(--gray-100);}
+.select-input{padding:9.5px 14px;border-radius:11px;background:var(--gray-100);border:1px solid transparent;font-size:13px;font-weight:600;color:var(--text);}
+.select-input:focus{border-color:var(--primary);background:var(--surface);}
+
+/* STAT STRIP */
+.stat-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-bottom:20px;}
+@media(max-width:1200px){.stat-strip{grid-template-columns:repeat(2,1fr);}}
+.stat-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:17px 18px;}
+.stat-box .num{font-size:22px;font-weight:800;}
+.stat-box .lbl{font-size:12px;color:var(--text-soft);margin-top:3px;}
+
+/* QUICK ACTIONS */
+.qa-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-bottom:22px;}
+@media(max-width:1300px){.qa-grid{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.qa-grid{grid-template-columns:repeat(2,1fr);}}
+.qa-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);
+  padding:20px 14px;text-align:center;transition:all var(--transition);
+}
+.qa-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:var(--primary);}
+.qa-icon{width:46px;height:46px;border-radius:13px;margin:0 auto 10px;display:flex;align-items:center;justify-content:center;font-size:18px;background:var(--primary-light);color:var(--primary);}
+.qa-card span{font-size:12.5px;font-weight:700;}
+
+/* POS */
+.pos-layout{display:grid;grid-template-columns:1.5fr 1fr;gap:20px;align-items:start;}
+@media(max-width:1150px){.pos-layout{grid-template-columns:1fr;}}
+.med-search-results{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:16px;max-height:560px;overflow-y:auto;padding-right:4px;}
+@media(max-width:1400px){.med-search-results{grid-template-columns:1fr;}}
+.med-tile{border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;transition:var(--transition);cursor:pointer;}
+.med-tile:hover{border-color:var(--primary);box-shadow:var(--shadow-sm);}
+.med-tile-top{display:flex;justify-content:space-between;margin-bottom:6px;}
+.med-tile h4{font-size:13.5px;font-weight:700;}
+.med-tile .brand{font-size:11.3px;color:var(--text-soft);}
+.med-tile-meta{display:flex;justify-content:space-between;align-items:flex-end;margin-top:10px;}
+.med-tile-price{font-size:15px;font-weight:800;color:var(--primary);}
+.med-tile .mrp{font-size:11px;color:var(--text-soft);text-decoration:line-through;}
+
+.cart-panel{position:sticky;top:calc(var(--header-h) + 20px);}
+.cart-list{max-height:320px;overflow-y:auto;margin-bottom:14px;}
+.cart-item{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-bottom:1px solid var(--border);gap:8px;}
+.cart-item-info h5{font-size:13px;font-weight:700;}
+.cart-item-info span{font-size:11px;color:var(--text-soft);}
+.qty-ctrl{display:flex;align-items:center;gap:7px;background:var(--gray-100);border-radius:8px;padding:3px;}
+.qty-ctrl button{width:22px;height:22px;border-radius:6px;background:var(--surface);font-weight:800;font-size:12px;box-shadow:var(--shadow-sm);}
+.qty-ctrl span{width:20px;text-align:center;font-weight:700;font-size:12.5px;}
+.cart-item-price{font-weight:700;font-size:13px;width:64px;text-align:right;}
+.cart-item .remove-btn{color:var(--red);font-size:13px;width:24px;}
+.cart-summary-row{display:flex;justify-content:space-between;font-size:13px;padding:6px 0;color:var(--text-soft);}
+.cart-summary-row.total{font-size:17px;font-weight:800;color:var(--text);border-top:1px dashed var(--border);margin-top:6px;padding-top:12px;}
+.pay-methods{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:14px 0;}
+.pay-methods button{padding:12px 6px;border:1.5px solid var(--border);border-radius:11px;font-weight:700;font-size:12.5px;display:flex;flex-direction:column;align-items:center;gap:6px;transition:var(--transition);}
+.pay-methods button i{font-size:16px;}
+.pay-methods button.active{border-color:var(--primary);background:var(--primary-light);color:var(--primary-dark);}
+.empty-cart{text-align:center;padding:40px 10px;color:var(--text-soft);}
+.empty-cart i{font-size:34px;margin-bottom:10px;opacity:.4;}
+
+/* MODAL */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(8,14,26,.55);backdrop-filter:blur(3px);
+  display:flex;align-items:center;justify-content:center;z-index:1000;opacity:0;visibility:hidden;
+  transition:all .2s ease;padding:20px;
+}
+.modal-overlay.show{opacity:1;visibility:visible;}
+.modal-box{
+  background:var(--surface);border-radius:var(--radius-lg);width:100%;max-width:560px;
+  max-height:88vh;overflow-y:auto;box-shadow:var(--shadow-lg);
+  transform:translateY(14px) scale(.97);transition:transform .22s cubic-bezier(.34,1.56,.64,1);
+}
+.modal-overlay.show .modal-box{transform:translateY(0) scale(1);}
+.modal-box.modal-lg{max-width:760px;}
+.modal-head{display:flex;justify-content:space-between;align-items:center;padding:20px 24px;border-bottom:1px solid var(--border);position:sticky;top:0;background:var(--surface);z-index:2;}
+.modal-head h3{font-size:16.5px;font-weight:800;}
+.modal-close{width:32px;height:32px;border-radius:9px;color:var(--text-soft);font-size:15px;}
+.modal-close:hover{background:var(--gray-100);color:var(--text);}
+.modal-body{padding:22px 24px;}
+.modal-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;position:sticky;bottom:0;background:var(--surface);}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid.full{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field.span-2{grid-column:span 2;}
+@media(max-width:520px){.form-grid{grid-template-columns:1fr;}.field.span-2{grid-column:span 1;}}
+.field label{font-size:12.3px;font-weight:700;color:var(--text-soft);}
+.field input,.field select,.field textarea{
+  padding:10.5px 13px;border-radius:10px;border:1.5px solid var(--border);background:var(--gray-50);
+  font-size:13.3px;transition:var(--transition);color:var(--text);
+}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--primary);background:var(--surface);}
+.field .error-msg{font-size:11.3px;color:var(--red);display:none;}
+.field.invalid input,.field.invalid select{border-color:var(--red);background:var(--red-light);}
+.field.invalid .error-msg{display:block;}
+
+.success-modal{text-align:center;padding:10px 6px 6px;}
+.success-icon{width:70px;height:70px;border-radius:50%;background:var(--emerald-light);color:var(--emerald);
+  display:flex;align-items:center;justify-content:center;font-size:30px;margin:0 auto 16px;animation:pop .4s cubic-bezier(.34,1.56,.64,1);}
+@keyframes pop{0%{transform:scale(0);}100%{transform:scale(1);}}
+.success-modal h3{font-size:19px;margin-bottom:6px;}
+.success-modal p{color:var(--text-soft);font-size:13px;margin-bottom:18px;}
+.invoice-mini{background:var(--gray-50);border-radius:var(--radius-sm);padding:16px;margin-bottom:18px;text-align:left;}
+.invoice-mini .row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;}
+
+/* TOASTS */
+.toast-stack{position:fixed;top:22px;right:22px;z-index:2000;display:flex;flex-direction:column;gap:10px;}
+.toast{
+  background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--emerald);
+  border-radius:11px;padding:13px 18px;min-width:290px;box-shadow:var(--shadow-lg);
+  display:flex;align-items:center;gap:11px;animation:toastIn .3s cubic-bezier(.34,1.56,.64,1);
+}
+.toast.warn{border-left-color:var(--amber);}
+.toast.error{border-left-color:var(--red);}
+.toast i{font-size:16px;color:var(--emerald);}
+.toast.warn i{color:var(--amber);}
+.toast.error i{color:var(--red);}
+.toast span{font-size:13px;font-weight:600;}
+@keyframes toastIn{from{opacity:0;transform:translateX(40px);}to{opacity:1;transform:translateX(0);}}
+.toast.hide{animation:toastOut .3s ease forwards;}
+@keyframes toastOut{to{opacity:0;transform:translateX(40px);}}
+
+/* CONFIRM DIALOG */
+.confirm-box{max-width:400px;text-align:center;padding:26px 24px;}
+.confirm-box i{font-size:32px;color:var(--red);margin-bottom:12px;}
+.confirm-box h3{font-size:16px;margin-bottom:8px;}
+.confirm-box p{color:var(--text-soft);font-size:13px;margin-bottom:20px;}
+.confirm-box .modal-footer{border:none;padding:0;justify-content:center;}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:50px 20px;color:var(--text-soft);}
+.empty-state i{font-size:38px;margin-bottom:12px;opacity:.35;}
+.empty-state h4{font-size:14.5px;color:var(--text);margin-bottom:4px;}
+
+/* CHART */
+.chart-legend{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap;}
+.chart-legend div{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--text-soft);font-weight:600;}
+.chart-legend span{width:10px;height:10px;border-radius:3px;}
+
+/* URGENCY DOT */
+.urgency-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;}
+
+/* SETTINGS */
+.settings-grid{display:grid;grid-template-columns:220px 1fr;gap:20px;}
+@media(max-width:900px){.settings-grid{grid-template-columns:1fr;}}
+.settings-nav button{width:100%;text-align:left;padding:11px 15px;border-radius:10px;font-size:13.3px;font-weight:600;color:var(--text-soft);margin-bottom:3px;}
+.settings-nav button.active{background:var(--primary-light);color:var(--primary-dark);}
+.settings-section{display:none;}
+.settings-section.active{display:block;}
+.toggle-row{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid var(--border);}
+.toggle-row:last-child{border-bottom:none;}
+.toggle-row strong{font-size:13.3px;font-weight:700;display:block;}
+.toggle-row span{font-size:12px;color:var(--text-soft);}
+.switch{width:44px;height:25px;border-radius:20px;background:var(--gray-300);position:relative;transition:var(--transition);flex-shrink:0;}
+.switch::after{content:'';position:absolute;top:3px;left:3px;width:19px;height:19px;border-radius:50%;background:#fff;transition:var(--transition);box-shadow:var(--shadow-sm);}
+.switch.on{background:var(--primary);}
+.switch.on::after{transform:translateX(19px);}
+
+/* PROGRESS */
+.progress{height:8px;border-radius:10px;background:var(--gray-200);overflow:hidden;}
+.progress span{display:block;height:100%;border-radius:10px;transition:width .5s ease;}
+
+/* MISC */
+.text-soft{color:var(--text-soft);}
+.mb-0{margin-bottom:0;}
+.about-brand{text-align:center;padding:6px 0 16px;}
+.about-brand .brand-mark{margin:0 auto 14px;width:56px;height:56px;font-size:24px;border-radius:16px;}
+.about-brand h3{font-size:18px;margin-bottom:4px;}
+.about-brand p{color:var(--text-soft);font-size:13px;}
+.about-list{margin-top:16px;}
+.about-list li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:13px;}
+.about-list li:last-child{border-bottom:none;}
+.about-list b{color:var(--text-soft);font-weight:600;}
+
+.tooltip-wrap{position:relative;}
+.tooltip-wrap .tip{
+  position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);
+  background:var(--gray-900);color:#fff;font-size:11px;padding:5px 9px;border-radius:6px;
+  white-space:nowrap;opacity:0;visibility:hidden;transition:.15s;pointer-events:none;
+}
+.tooltip-wrap:hover .tip{opacity:1;visibility:visible;}
+
+.founder-strip{text-align:center;padding:16px;color:var(--text-soft);font-size:12px;}
+.founder-strip b{color:var(--text);}
+
+/* MOBILE */
+@media(max-width:1024px){
+  .sidebar{transform:translateX(-100%);width:270px;}
+  .sidebar.mobile-open{transform:translateX(0);}
+  .main-wrap,.main-wrap.collapsed{margin-left:0;}
+  .search-wrap{display:none;}
+}
+@media(max-width:640px){
+  .content{padding:16px;}
+  .topbar{padding:0 14px;}
+  .hero-card{flex-direction:column;align-items:flex-start;}
+  .hero-actions{align-items:flex-start;width:100%;}
+  .panel{padding:16px;}
+  table thead{display:none;}
+  table, tbody, tr, td{display:block;width:100%;}
+  tbody tr{border:1px solid var(--border);border-radius:12px;margin-bottom:10px;padding:6px 12px;}
+  tbody td{border:none;display:flex;justify-content:space-between;gap:10px;padding:8px 0;text-align:right;}
+  tbody td::before{content:attr(data-label);font-weight:700;color:var(--text-soft);font-size:11px;text-transform:uppercase;text-align:left;}
+}
+</style>
+</head>
+<body>
+
+<div class="toast-stack" id="toastStack"></div>
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="app-shell">
+
+  <!-- ================= SIDEBAR ================= -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <div class="brand-mark"><i class="fa-solid fa-suitcase-medical"></i></div>
+      <div class="brand-text"><strong>MediCare Pro</strong><span>Pharmacy Suite</span></div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="nav-section-label">Overview</div>
+      <a class="nav-item active" data-page="dashboard"><i class="fa-solid fa-grip"></i><span class="label">Dashboard</span></a>
+      <a class="nav-item" data-page="pos"><i class="fa-solid fa-cash-register"></i><span class="label">Sales / POS</span></a>
+      <div class="nav-section-label">Inventory</div>
+      <a class="nav-item" data-page="purchase"><i class="fa-solid fa-truck-fast"></i><span class="label">Purchase</span></a>
+      <a class="nav-item" data-page="inventory"><i class="fa-solid fa-boxes-stacked"></i><span class="label">Inventory</span></a>
+      <a class="nav-item" data-page="medicines"><i class="fa-solid fa-pills"></i><span class="label">Medicines</span></a>
+      <a class="nav-item" data-page="expiry"><i class="fa-solid fa-hourglass-end"></i><span class="label">Expiry Mgmt</span><span class="nav-badge" id="navExpiryBadge">0</span></a>
+      <a class="nav-item" data-page="lowstock"><i class="fa-solid fa-triangle-exclamation"></i><span class="label">Low Stock</span><span class="nav-badge" id="navLowBadge">0</span></a>
+      <div class="nav-section-label">People</div>
+      <a class="nav-item" data-page="suppliers"><i class="fa-solid fa-handshake"></i><span class="label">Suppliers</span></a>
+      <a class="nav-item" data-page="customers"><i class="fa-solid fa-users"></i><span class="label">Customers</span></a>
+      <a class="nav-item" data-page="prescriptions"><i class="fa-solid fa-file-waveform"></i><span class="label">Prescriptions</span></a>
+      <a class="nav-item" data-page="employees"><i class="fa-solid fa-id-badge"></i><span class="label">Employees</span></a>
+      <div class="nav-section-label">System</div>
+      <a class="nav-item" data-page="reports"><i class="fa-solid fa-chart-pie"></i><span class="label">Reports</span></a>
+      <a class="nav-item" data-page="settings"><i class="fa-solid fa-gear"></i><span class="label">Settings</span></a>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="founder-avatar">NK</div>
+      <div class="founder-info"><strong>Nitish Kumar</strong><span>Founder &amp; CEO</span></div>
+    </div>
+  </aside>
+
+  <!-- ================= MAIN ================= -->
+  <div class="main-wrap" id="mainWrap">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="menuToggle"><i class="fa-solid fa-bars"></i></button>
+        <div class="page-heading">
+          <h1 id="pageTitle">Dashboard</h1>
+          <div class="breadcrumb">MediCare Pro / <span id="pageBreadcrumb">Dashboard</span></div>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="search-wrap">
+          <i class="fa-solid fa-magnifying-glass"></i>
+          <input class="search-input" id="globalSearch" placeholder="Search medicines, invoices...">
+        </div>
+        <div style="position:relative;">
+          <button class="icon-btn" id="notifBtn"><i class="fa-regular fa-bell"></i><span class="badge-dot"></span></button>
+          <div class="dropdown-panel" id="notifPanel">
+            <div class="dropdown-header"><strong>Notifications</strong><a href="#">Mark all read</a></div>
+            <div class="dropdown-list" id="notifList"></div>
+          </div>
+        </div>
+        <button class="icon-btn" id="themeToggle"><i class="fa-regular fa-moon"></i></button>
+        <div style="position:relative;">
+          <div class="user-chip" id="userChipBtn">
+            <div class="user-avatar">AD</div>
+            <span>Admin</span>
+            <i class="fa-solid fa-chevron-down" style="font-size:10px;color:var(--text-soft);"></i>
+          </div>
+          <div class="dropdown-panel user-dropdown" id="userPanel">
+            <div class="menu-item" id="btnAbout"><i class="fa-solid fa-circle-info"></i> About MediCare Pro</div>
+            <div class="menu-item" data-goto="settings"><i class="fa-solid fa-gear"></i> Settings</div>
+            <div class="menu-item"><i class="fa-solid fa-key"></i> Change Password</div>
+            <div class="dropdown-divider"></div>
+            <div class="menu-item" style="color:var(--red);"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+
+      <!-- ============ DASHBOARD ============ -->
+      <section class="page active" id="page-dashboard">
+        <div class="hero-card">
+          <div>
+            <h2 id="greetingText">Good Afternoon, Admin 👋</h2>
+            <p>Here's what's happening with your pharmacy today.</p>
+          </div>
+          <div class="hero-actions">
+            <span class="hero-date" id="heroDate"></span>
+            <button class="btn btn-white" onclick="openPOS()"><i class="fa-solid fa-plus"></i> New Sale</button>
+          </div>
+        </div>
+
+        <div class="grid kpi-grid" id="kpiGrid"></div>
+
+        <div class="two-col">
+          <div class="panel">
+            <div class="panel-head">
+              <div><h3>Sales Analytics</h3><div class="sub" id="chartSubtitle">Revenue trend for the last 7 days</div></div>
+              <div class="chip-filter" id="chartFilters">
+                <button class="active" data-range="7d">7 Days</button>
+                <button data-range="30d">30 Days</button>
+                <button data-range="3m">3 Months</button>
+                <button data-range="1y">1 Year</button>
+              </div>
+            </div>
+            <canvas id="salesChart" height="230"></canvas>
+            <div class="chart-legend">
+              <div><span style="background:var(--primary);"></span> Revenue</div>
+              <div><span style="background:var(--emerald);"></span> Orders</div>
+            </div>
+            <div class="stat-strip" style="margin-top:18px;margin-bottom:0;">
+              <div class="stat-box"><div class="num" id="statRevenue">₹0</div><div class="lbl">Revenue</div></div>
+              <div class="stat-box"><div class="num" id="statOrders">0</div><div class="lbl">Orders</div></div>
+              <div class="stat-box"><div class="num" id="statAOV">₹0</div><div class="lbl">Avg Order Value</div></div>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="panel-head"><h3>Quick Actions</h3></div>
+            <div class="grid" style="grid-template-columns:repeat(2,1fr);gap:12px;">
+              <div class="qa-card" onclick="openPOS()"><div class="qa-icon"><i class="fa-solid fa-cash-register"></i></div><span>New Sale</span></div>
+              <div class="qa-card" onclick="openModal('modalMedicine')"><div class="qa-icon"><i class="fa-solid fa-pills"></i></div><span>Add Medicine</span></div>
+              <div class="qa-card" onclick="openModal('modalPurchase')"><div class="qa-icon"><i class="fa-solid fa-truck-fast"></i></div><span>Add Purchase</span></div>
+              <div class="qa-card" onclick="openModal('modalCustomer')"><div class="qa-icon"><i class="fa-solid fa-user-plus"></i></div><span>Add Customer</span></div>
+              <div class="qa-card" onclick="openModal('modalPrescription')"><div class="qa-icon"><i class="fa-solid fa-file-waveform"></i></div><span>Prescription</span></div>
+              <div class="qa-card" onclick="goto('reports')"><div class="qa-icon"><i class="fa-solid fa-chart-pie"></i></div><span>Report</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Recent Transactions</h3><div class="sub">Latest sales from your pharmacy</div></div>
+            <button class="btn btn-outline btn-sm" onclick="goto('pos')"><i class="fa-solid fa-arrow-right"></i> View All</button>
+          </div>
+          <div class="table-scroll">
+            <table>
+              <thead><tr><th>Invoice ID</th><th>Customer</th><th>Date</th><th>Items</th><th>Payment</th><th>Amount</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="recentTxBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ POS ============ -->
+      <section class="page" id="page-pos">
+        <div class="pos-layout">
+          <div class="panel">
+            <div class="panel-head"><h3>Find Medicine</h3><div class="sub">Search by name, generic, SKU or barcode</div></div>
+            <div class="search-wrap" style="width:100%;">
+              <i class="fa-solid fa-magnifying-glass"></i>
+              <input class="search-input" id="posSearch" style="width:100%;" placeholder="Search medicine name, generic, SKU, barcode...">
+            </div>
+            <div class="med-search-results" id="posResults"></div>
+          </div>
+
+          <div class="panel cart-panel">
+            <div class="panel-head"><h3>Current Cart</h3><span class="badge badge-blue" id="cartCount">0 items</span></div>
+            <div class="cart-list" id="cartList"></div>
+            <div id="cartSummaryWrap">
+              <div class="cart-summary-row"><span>Subtotal</span><span id="sumSubtotal">₹0.00</span></div>
+              <div class="cart-summary-row"><span>Discount</span><span id="sumDiscount">- ₹0.00</span></div>
+              <div class="cart-summary-row"><span>GST</span><span id="sumGST">+ ₹0.00</span></div>
+              <div class="cart-summary-row total"><span>Grand Total</span><span id="sumTotal">₹0.00</span></div>
+            </div>
+            <div class="pay-methods" id="payMethods">
+              <button class="active" data-method="Cash"><i class="fa-solid fa-money-bill-wave"></i>Cash</button>
+              <button data-method="UPI"><i class="fa-solid fa-mobile-screen"></i>UPI</button>
+              <button data-method="Card"><i class="fa-solid fa-credit-card"></i>Card</button>
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:13px;" onclick="completeSale()"><i class="fa-solid fa-check"></i> Complete Sale</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PURCHASE ============ -->
+      <section class="page" id="page-purchase">
+        <div class="stat-strip" id="purchaseStats"></div>
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Purchase Orders</h3><div class="sub">Track incoming stock from suppliers</div></div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modalPurchase')"><i class="fa-solid fa-plus"></i> New Purchase</button>
+          </div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Purchase ID</th><th>Supplier</th><th>Date</th><th>Items</th><th>Amount</th><th>Payment</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="purchaseBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ INVENTORY ============ -->
+      <section class="page" id="page-inventory">
+        <div class="stat-strip" id="inventoryStats"></div>
+        <div class="panel">
+          <div class="panel-head"><h3>Inventory</h3></div>
+          <div class="toolbar">
+            <div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input class="search-input" id="invSearch" placeholder="Search medicine..."></div>
+            <select class="select-input" id="invCategoryFilter"><option value="">All Categories</option></select>
+            <select class="select-input" id="invStatusFilter">
+              <option value="">All Status</option><option>In Stock</option><option>Low Stock</option><option>Out of Stock</option><option>Expiring Soon</option>
+            </select>
+            <select class="select-input" id="invSort"><option value="name">Sort: Name</option><option value="stock">Sort: Stock</option><option value="expiry">Sort: Expiry</option></select>
+          </div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Medicine</th><th>Category</th><th>Batch No.</th><th>Supplier</th><th>Purchase Price</th><th>MRP</th><th>Stock</th><th>Expiry</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="inventoryBody"></tbody></table>
+          </div>
+          <div class="pagination"><span id="invPageInfo"></span><div class="page-btns" id="invPageBtns"></div></div>
+        </div>
+      </section>
+
+      <!-- ============ MEDICINES ============ -->
+      <section class="page" id="page-medicines">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Medicines</h3><div class="sub">Manage your medicine master data</div></div>
+            <button class="btn btn-primary btn-sm" onclick="openMedicineModal()"><i class="fa-solid fa-plus"></i> Add Medicine</button>
+          </div>
+          <div class="toolbar"><div class="search-wrap"><i class="fa-solid fa-magnifying-glass"></i><input class="search-input" id="medSearch" placeholder="Search medicines..."></div></div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Medicine</th><th>Manufacturer</th><th>Category</th><th>Strength</th><th>HSN</th><th>GST</th><th>MRP</th><th>Stock</th><th>Reorder</th><th>Expiry</th><th>Actions</th></tr></thead>
+            <tbody id="medicinesBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SUPPLIERS ============ -->
+      <section class="page" id="page-suppliers">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Suppliers</h3></div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modalSupplier')"><i class="fa-solid fa-plus"></i> Add Supplier</button>
+          </div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Supplier</th><th>Company</th><th>Phone</th><th>Email</th><th>Total Purchases</th><th>Outstanding</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="suppliersBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CUSTOMERS ============ -->
+      <section class="page" id="page-customers">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Customers</h3></div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modalCustomer')"><i class="fa-solid fa-plus"></i> Add Customer</button>
+          </div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Customer</th><th>Phone</th><th>Email</th><th>Total Purchases</th><th>Last Purchase</th><th>Outstanding</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="customersBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ PRESCRIPTIONS ============ -->
+      <section class="page" id="page-prescriptions">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Prescriptions</h3></div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modalPrescription')"><i class="fa-solid fa-plus"></i> Add Prescription</button>
+          </div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Prescription ID</th><th>Patient</th><th>Doctor</th><th>Date</th><th>Medicines</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="prescriptionsBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ EXPIRY ============ -->
+      <section class="page" id="page-expiry">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Expiry Management</h3><div class="sub">Track batches approaching expiry</div></div>
+            <div class="chip-filter" id="expiryFilters">
+              <button class="active" data-f="all">All</button>
+              <button data-f="expired">Expired</button>
+              <button data-f="30">30 Days</button>
+              <button data-f="60">60 Days</button>
+              <button data-f="90">90 Days</button>
+            </div>
+          </div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Medicine</th><th>Batch</th><th>Quantity</th><th>Expiry Date</th><th>Days Remaining</th><th>Purchase Value</th><th>Action</th></tr></thead>
+            <tbody id="expiryBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ LOW STOCK ============ -->
+      <section class="page" id="page-lowstock">
+        <div class="panel">
+          <div class="panel-head"><div><h3>Low Stock Medicines</h3><div class="sub">Items below their reorder level</div></div></div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Medicine</th><th>Current Stock</th><th>Reorder Level</th><th>Supplier</th><th>Suggested Qty</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="lowStockBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ REPORTS ============ -->
+      <section class="page" id="page-reports">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Reports Center</h3><div class="sub">Generate and export business reports</div></div>
+            <div style="display:flex;gap:8px;">
+              <input type="date" class="select-input"><span style="align-self:center;color:var(--text-soft);">to</span><input type="date" class="select-input">
+              <button class="btn btn-outline btn-sm" onclick="showToast('Report exported as CSV','success')"><i class="fa-solid fa-file-csv"></i> CSV</button>
+              <button class="btn btn-outline btn-sm" onclick="showToast('Report sent to printer','success')"><i class="fa-solid fa-print"></i> Print</button>
+              <button class="btn btn-primary btn-sm" onclick="showToast('PDF report downloaded','success')"><i class="fa-solid fa-file-pdf"></i> PDF</button>
+            </div>
+          </div>
+          <div class="grid" style="grid-template-columns:repeat(4,1fr);gap:14px;" id="reportCards"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Revenue Overview</h3></div>
+          <canvas id="reportChart" height="220"></canvas>
+        </div>
+      </section>
+
+      <!-- ============ EMPLOYEES ============ -->
+      <section class="page" id="page-employees">
+        <div class="panel">
+          <div class="panel-head">
+            <div><h3>Employees</h3></div>
+            <button class="btn btn-primary btn-sm" onclick="openModal('modalEmployee')"><i class="fa-solid fa-plus"></i> Add Employee</button>
+          </div>
+          <div class="table-scroll">
+            <table><thead><tr><th>Employee</th><th>Role</th><th>Phone</th><th>Joining Date</th><th>Sales</th><th>Status</th><th>Action</th></tr></thead>
+            <tbody id="employeesBody"></tbody></table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="page" id="page-settings">
+        <div class="settings-grid">
+          <div class="settings-nav panel" style="padding:12px;">
+            <button class="active" data-sec="profile">Pharmacy Profile</button>
+            <button data-sec="invoice">Invoice Settings</button>
+            <button data-sec="system">System</button>
+            <button data-sec="security">Security</button>
+            <button data-sec="about">About</button>
+          </div>
+          <div>
+            <div class="settings-section panel active" id="sec-profile">
+              <div class="panel-head"><h3>Pharmacy Profile</h3></div>
+              <div class="form-grid">
+                <div class="field"><label>Pharmacy Name</label><input value="MediCare Pro Pharmacy"></div>
+                <div class="field"><label>Owner</label><input value="Nitish Kumar"></div>
+                <div class="field"><label>Phone</label><input value="+91 98450 12345"></div>
+                <div class="field"><label>Email</label><input value="contact@medicarepro.in"></div>
+                <div class="field span-2"><label>Address</label><input value="12, MG Road, Patna, Bihar - 800001"></div>
+                <div class="field"><label>GSTIN</label><input value="10ABCDE1234F1Z5"></div>
+                <div class="field"><label>Drug License Number</label><input value="BR-DL-2024-9981"></div>
+              </div>
+              <div class="modal-footer" style="border:none;padding:20px 0 0;"><button class="btn btn-primary" onclick="showToast('Pharmacy profile saved','success')">Save Changes</button></div>
+            </div>
+
+            <div class="settings-section panel" id="sec-invoice">
+              <div class="panel-head"><h3>Invoice Settings</h3></div>
+              <div class="form-grid">
+                <div class="field"><label>Invoice Prefix</label><input value="INV-"></div>
+                <div class="field"><label>Default GST %</label><input value="12"></div>
+                <div class="field span-2"><label>Invoice Footer Note</label><input value="Thank you for choosing our pharmacy."></div>
+                <div class="field span-2"><label>Pharmacy Logo</label><input type="file"></div>
+              </div>
+              <div class="modal-footer" style="border:none;padding:20px 0 0;"><button class="btn btn-primary" onclick="showToast('Invoice settings saved','success')">Save Changes</button></div>
+            </div>
+
+            <div class="settings-section panel" id="sec-system">
+              <div class="panel-head"><h3>System Preferences</h3></div>
+              <div class="toggle-row"><div><strong>Dark Mode</strong><span>Use dark theme across the app</span></div><div class="switch" id="settingsDarkSwitch" onclick="toggleTheme()"></div></div>
+              <div class="toggle-row"><div><strong>Notifications</strong><span>Get alerts for stock & sales</span></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="toggle-row"><div><strong>Auto Backup</strong><span>Automatically back up daily data</span></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="toggle-row"><div><strong>Low Stock Alerts</strong><span>Notify when stock hits reorder level</span></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+              <div class="toggle-row"><div><strong>Expiry Alerts</strong><span>Notify before medicines expire</span></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+            </div>
+
+            <div class="settings-section panel" id="sec-security">
+              <div class="panel-head"><h3>Security</h3></div>
+              <div class="form-grid">
+                <div class="field"><label>Current Password</label><input type="password" placeholder="••••••••"></div>
+                <div class="field"></div>
+                <div class="field"><label>New Password</label><input type="password" placeholder="••••••••"></div>
+                <div class="field"><label>Confirm Password</label><input type="password" placeholder="••••••••"></div>
+              </div>
+              <div class="modal-footer" style="border:none;padding:20px 0 0;"><button class="btn btn-primary" onclick="showToast('Password updated successfully','success')">Update Password</button></div>
+              <div class="panel-head" style="margin-top:10px;"><h3>Session Settings</h3></div>
+              <div class="toggle-row"><div><strong>Auto Logout</strong><span>Log out after 30 minutes of inactivity</span></div><div class="switch on" onclick="this.classList.toggle('on')"></div></div>
+            </div>
+
+            <div class="settings-section panel" id="sec-about">
+              <div class="about-brand">
+                <div class="brand-mark"><i class="fa-solid fa-suitcase-medical"></i></div>
+                <h3>MediCare Pro</h3><p>Pharmacy Management System · Version 1.0.0</p>
+              </div>
+              <ul class="about-list">
+                <li><b>Founder & CEO</b> Nitish Kumar</li>
+                <li><b>Built for</b> Modern pharmacy management</li>
+                <li><b>Version</b> 1.0.0</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <div class="founder-strip">Built for modern pharmacy management &middot; Founder &amp; CEO — <b>Nitish Kumar</b></div>
+      </section>
+
+    </main>
+  </div>
+</div>
+
+<!-- ================= MODALS ================= -->
+
+<div class="modal-overlay" id="modalMedicine">
+  <div class="modal-box modal-lg">
+    <div class="modal-head"><h3 id="medicineModalTitle">Add Medicine</h3><button class="modal-close" onclick="closeModal('modalMedicine')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <form id="medicineForm" class="form-grid" novalidate>
+        <input type="hidden" id="med_id">
+        <div class="field" id="f_med_name"><label>Medicine Name *</label><input id="med_name" required><span class="error-msg">Medicine name is required</span></div>
+        <div class="field" id="f_med_generic"><label>Generic Name *</label><input id="med_generic" required><span class="error-msg">Generic name is required</span></div>
+        <div class="field"><label>Manufacturer</label><input id="med_manufacturer"></div>
+        <div class="field"><label>Category</label>
+          <select id="med_category"><option>Tablet</option><option>Syrup</option><option>Capsule</option><option>Injection</option><option>Ointment</option><option>Drops</option></select>
+        </div>
+        <div class="field"><label>Strength</label><input id="med_strength" placeholder="e.g. 500mg"></div>
+        <div class="field"><label>Dosage Form</label>
+          <select id="med_dosage"><option>Tablet</option><option>Capsule</option><option>Syrup</option><option>Injection</option><option>Cream</option></select>
+        </div>
+        <div class="field"><label>Batch Number</label><input id="med_batch" placeholder="e.g. BT-2026-01"></div>
+        <div class="field" id="f_med_purchase"><label>Purchase Price (₹) *</label><input id="med_purchase" type="number" step="0.01" required><span class="error-msg">Enter a valid price</span></div>
+        <div class="field" id="f_med_mrp"><label>MRP (₹) *</label><input id="med_mrp" type="number" step="0.01" required><span class="error-msg">Enter a valid MRP</span></div>
+        <div class="field"><label>Selling Price (₹)</label><input id="med_selling" type="number" step="0.01"></div>
+        <div class="field"><label>GST (%)</label><input id="med_gst" type="number" value="12"></div>
+        <div class="field" id="f_med_qty"><label>Quantity *</label><input id="med_qty" type="number" required><span class="error-msg">Enter valid quantity</span></div>
+        <div class="field"><label>Reorder Level</label><input id="med_reorder" type="number" value="20"></div>
+        <div class="field span-2" id="f_med_expiry"><label>Expiry Date *</label><input id="med_expiry" type="date" required><span class="error-msg">Expiry date is required</span></div>
+      </form>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalMedicine')">Cancel</button><button class="btn btn-primary" onclick="saveMedicine()">Save Medicine</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalPurchase">
+  <div class="modal-box modal-lg">
+    <div class="modal-head"><h3>New Purchase Order</h3><button class="modal-close" onclick="closeModal('modalPurchase')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Supplier *</label><select id="pur_supplier"></select></div>
+        <div class="field"><label>Invoice Number</label><input id="pur_invoice" placeholder="SUP-INV-0001"></div>
+        <div class="field"><label>Medicine</label><select id="pur_medicine"></select></div>
+        <div class="field"><label>Batch</label><input id="pur_batch" placeholder="BT-2026-05"></div>
+        <div class="field"><label>Quantity *</label><input id="pur_qty" type="number"></div>
+        <div class="field"><label>Purchase Price (₹)</label><input id="pur_price" type="number"></div>
+        <div class="field"><label>Expiry Date</label><input id="pur_expiry" type="date"></div>
+        <div class="field"><label>GST (%)</label><input id="pur_gst" type="number" value="12"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalPurchase')">Cancel</button><button class="btn btn-primary" onclick="savePurchase()">Save Purchase</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalSupplier">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Add Supplier</h3><button class="modal-close" onclick="closeModal('modalSupplier')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Supplier Name *</label><input id="sup_name"></div>
+        <div class="field"><label>Company</label><input id="sup_company"></div>
+        <div class="field"><label>Phone *</label><input id="sup_phone"></div>
+        <div class="field"><label>Email</label><input id="sup_email"></div>
+        <div class="field"><label>GSTIN</label><input id="sup_gstin"></div>
+        <div class="field span-2"><label>Address</label><input id="sup_address"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalSupplier')">Cancel</button><button class="btn btn-primary" onclick="saveSupplier()">Save Supplier</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalCustomer">
+  <div class="modal-box">
+    <div class="modal-head"><h3 id="customerModalTitle">Add Customer</h3><button class="modal-close" onclick="closeModal('modalCustomer')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body" id="customerModalBody">
+      <div class="form-grid">
+        <div class="field"><label>Customer Name *</label><input id="cus_name"></div>
+        <div class="field"><label>Phone *</label><input id="cus_phone"></div>
+        <div class="field span-2"><label>Email</label><input id="cus_email"></div>
+      </div>
+    </div>
+    <div class="modal-footer" id="customerModalFooter"><button class="btn btn-outline" onclick="closeModal('modalCustomer')">Close</button><button class="btn btn-primary" id="saveCustomerBtn" onclick="saveCustomer()">Save Customer</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalPrescription">
+  <div class="modal-box modal-lg">
+    <div class="modal-head"><h3>Add Prescription</h3><button class="modal-close" onclick="closeModal('modalPrescription')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Patient Name *</label><input id="pre_patient"></div>
+        <div class="field"><label>Doctor</label><input id="pre_doctor"></div>
+        <div class="field"><label>Prescription Date</label><input id="pre_date" type="date"></div>
+        <div class="field"><label>Medicine</label><select id="pre_medicine"></select></div>
+        <div class="field"><label>Dosage</label><input id="pre_dosage" placeholder="1-0-1"></div>
+        <div class="field"><label>Frequency</label><input id="pre_frequency" placeholder="After meals"></div>
+        <div class="field"><label>Duration</label><input id="pre_duration" placeholder="5 days"></div>
+        <div class="field span-2"><label>Notes</label><textarea id="pre_notes" rows="2"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalPrescription')">Cancel</button><button class="btn btn-primary" onclick="savePrescription()">Save Prescription</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalEmployee">
+  <div class="modal-box">
+    <div class="modal-head"><h3>Add Employee</h3><button class="modal-close" onclick="closeModal('modalEmployee')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Employee Name *</label><input id="emp_name"></div>
+        <div class="field"><label>Role</label><select id="emp_role"><option>Pharmacist</option><option>Cashier</option><option>Manager</option><option>Admin</option></select></div>
+        <div class="field"><label>Phone *</label><input id="emp_phone"></div>
+        <div class="field"><label>Joining Date</label><input id="emp_joining" type="date"></div>
+      </div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalEmployee')">Cancel</button><button class="btn btn-primary" onclick="saveEmployee()">Save Employee</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalSuccess">
+  <div class="modal-box">
+    <div class="modal-body success-modal">
+      <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+      <h3>Sale Completed Successfully</h3>
+      <p>The invoice has been generated and saved.</p>
+      <div class="invoice-mini">
+        <div class="row"><span>Invoice Number</span><b id="successInvoice">INV-10000</b></div>
+        <div class="row"><span>Total Amount</span><b id="successAmount">₹0.00</b></div>
+        <div class="row"><span>Payment Method</span><b id="successMethod">Cash</b></div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-outline" style="flex:1;justify-content:center;" onclick="printInvoiceFromSuccess()"><i class="fa-solid fa-print"></i> Print Invoice</button>
+        <button class="btn btn-primary" style="flex:1;justify-content:center;" onclick="closeModal('modalSuccess')"><i class="fa-solid fa-plus"></i> New Sale</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalInvoice">
+  <div class="modal-box modal-lg">
+    <div class="modal-head"><h3>Invoice Preview</h3><button class="modal-close" onclick="closeModal('modalInvoice')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body" id="invoiceBody"></div>
+    <div class="modal-footer"><button class="btn btn-outline" onclick="closeModal('modalInvoice')">Close</button><button class="btn btn-primary" onclick="window.print()"><i class="fa-solid fa-print"></i> Print Invoice</button></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalCustomerProfile">
+  <div class="modal-box modal-lg">
+    <div class="modal-head"><h3>Customer Profile</h3><button class="modal-close" onclick="closeModal('modalCustomerProfile')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body" id="customerProfileBody"></div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalAbout">
+  <div class="modal-box">
+    <div class="modal-head"><h3>About</h3><button class="modal-close" onclick="closeModal('modalAbout')"><i class="fa-solid fa-xmark"></i></button></div>
+    <div class="modal-body">
+      <div class="about-brand">
+        <div class="brand-mark"><i class="fa-solid fa-suitcase-medical"></i></div>
+        <h3>MediCare Pro</h3><p>Pharmacy Management System</p>
+      </div>
+      <ul class="about-list">
+        <li><b>Founder & CEO</b> Nitish Kumar</li>
+        <li><b>Version</b> 1.0.0</li>
+        <li><b>Tagline</b> Built for modern pharmacy management</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalConfirm">
+  <div class="modal-box confirm-box">
+    <i class="fa-solid fa-triangle-exclamation"></i>
+    <h3>Are you sure?</h3>
+    <p id="confirmText">This action cannot be undone.</p>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="closeModal('modalConfirm')">Cancel</button>
+      <button class="btn btn-danger" id="confirmActionBtn">Delete</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================================================================
+   MEDICARE PRO — APPLICATION SCRIPT
+   =================================================================== */
+
+/* ---------- SEED DATA ---------- */
+const today = new Date('2026-09-12');
+function d(offset){ const x = new Date(today); x.setDate(x.getDate()+offset); return x.toISOString().slice(0,10); }
+function fmtDate(iso){ const x=new Date(iso); return x.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'}); }
+function inr(n){ return '₹' + Number(n).toLocaleString('en-IN',{maximumFractionDigits:2, minimumFractionDigits: (n%1!==0?2:0)}); }
+function uid(prefix){ return prefix + '-' + Math.floor(10000+Math.random()*89999); }
+
+const defaultData = {
+  medicines: [
+    {id:'MED-1001', name:'Paracetamol 500mg', generic:'Paracetamol', manufacturer:'Cipla Ltd.', category:'Tablet', strength:'500mg', dosage:'Tablet', batch:'BT-2401', hsn:'3004', purchase:12, mrp:22, selling:20, gst:12, qty:480, reorder:100, expiry:d(210)},
+    {id:'MED-1002', name:'Azithromycin 500mg', generic:'Azithromycin', manufacturer:'Sun Pharma', category:'Tablet', strength:'500mg', dosage:'Tablet', batch:'BT-2255', hsn:'3004', purchase:38, mrp:68, selling:65, gst:12, qty:18, reorder:40, expiry:d(48)},
+    {id:'MED-1003', name:'Pantoprazole 40mg', generic:'Pantoprazole', manufacturer:"Dr. Reddy's", category:'Tablet', strength:'40mg', dosage:'Tablet', batch:'BT-2199', hsn:'3004', purchase:22, mrp:42, selling:40, gst:12, qty:260, reorder:80, expiry:d(320)},
+    {id:'MED-1004', name:'Amoxicillin 500mg', generic:'Amoxicillin', manufacturer:'Alkem Labs', category:'Capsule', strength:'500mg', dosage:'Capsule', batch:'BT-2088', hsn:'3004', purchase:28, mrp:55, selling:52, gst:12, qty:6, reorder:60, expiry:d(25)},
+    {id:'MED-1005', name:'Cetirizine 10mg', generic:'Cetirizine', manufacturer:'Cipla Ltd.', category:'Tablet', strength:'10mg', dosage:'Tablet', batch:'BT-2333', hsn:'3004', purchase:8, mrp:18, selling:16, gst:5, qty:340, reorder:80, expiry:d(410)},
+    {id:'MED-1006', name:'Metformin 500mg', generic:'Metformin HCl', manufacturer:'USV Pvt Ltd', category:'Tablet', strength:'500mg', dosage:'Tablet', batch:'BT-2144', hsn:'3004', purchase:15, mrp:30, selling:28, gst:12, qty:0, reorder:100, expiry:d(190)},
+    {id:'MED-1007', name:'Omeprazole 20mg', generic:'Omeprazole', manufacturer:'Sun Pharma', category:'Capsule', strength:'20mg', dosage:'Capsule', batch:'BT-2011', hsn:'3004', purchase:18, mrp:36, selling:34, gst:12, qty:150, reorder:60, expiry:d(12)},
+    {id:'MED-1008', name:'Vitamin D3 60K', generic:'Cholecalciferol', manufacturer:'Mankind Pharma', category:'Capsule', strength:'60000 IU', dosage:'Capsule', batch:'BT-2410', hsn:'2936', purchase:9, mrp:19, selling:18, gst:5, qty:520, reorder:100, expiry:d(500)},
+    {id:'MED-1009', name:'Atorvastatin 10mg', generic:'Atorvastatin', manufacturer:'Cipla Ltd.', category:'Tablet', strength:'10mg', dosage:'Tablet', batch:'BT-2377', hsn:'3004', purchase:20, mrp:44, selling:41, gst:12, qty:32, reorder:50, expiry:d(75)},
+    {id:'MED-1010', name:'Ibuprofen 400mg', generic:'Ibuprofen', manufacturer:'Abbott India', category:'Tablet', strength:'400mg', dosage:'Tablet', batch:'BT-2298', hsn:'3004', purchase:10, mrp:20, selling:19, gst:12, qty:210, reorder:70, expiry:d(150)},
+    {id:'MED-1011', name:'Cough Syrup 100ml', generic:'Dextromethorphan', manufacturer:'Alkem Labs', category:'Syrup', strength:'100ml', dosage:'Syrup', batch:'BT-2050', hsn:'3004', purchase:35, mrp:70, selling:65, gst:12, qty:14, reorder:30, expiry:d(-5)},
+    {id:'MED-1012', name:'Insulin Glargine', generic:'Insulin Glargine', manufacturer:'Novo Nordisk', category:'Injection', strength:'100IU/ml', dosage:'Injection', batch:'BT-1980', hsn:'3004', purchase:410, mrp:620, selling:600, gst:5, qty:22, reorder:20, expiry:d(85)},
+  ],
+  customers: [
+    {id:'CUS-1', name:'Rahul Sharma', phone:'+91 98230 11223', email:'rahul.sharma@gmail.com', total:12480, last:d(0), outstanding:0, status:'Active'},
+    {id:'CUS-2', name:'Priya Kumari', phone:'+91 97845 55210', email:'priya.kumari@gmail.com', total:8420, last:d(0), outstanding:250, status:'Active'},
+    {id:'CUS-3', name:'Amit Verma', phone:'+91 90123 45678', email:'amit.verma@yahoo.com', total:3200, last:d(-4), outstanding:0, status:'Active'},
+    {id:'CUS-4', name:'Sunita Devi', phone:'+91 96543 21098', email:'sunita.devi@gmail.com', total:19850, last:d(-1), outstanding:0, status:'VIP'},
+    {id:'CUS-5', name:'Manoj Kumar', phone:'+91 88990 12345', email:'manoj.kumar@gmail.com', total:1560, last:d(-12), outstanding:480, status:'Active'},
+    {id:'CUS-6', name:'Kavita Singh', phone:'+91 99887 66554', email:'kavita.singh@gmail.com', total:6740, last:d(-2), outstanding:0, status:'Active'},
+  ],
+  suppliers: [
+    {id:'SUP-1', name:'Ramesh Gupta', company:'Bihar Pharma Distributors', phone:'+91 94301 22110', email:'sales@biharpharma.in', total:184000, outstanding:12500, status:'Active'},
+    {id:'SUP-2', name:'Anita Rao', company:'MedLine Wholesale Corp.', phone:'+91 93456 78901', email:'anita@medlinewholesale.in', total:96000, outstanding:0, status:'Active'},
+    {id:'SUP-3', name:'Suresh Yadav', company:'National Drug House', phone:'+91 90011 22334', email:'suresh@ndh.co.in', total:225000, outstanding:34500, status:'Active'},
+    {id:'SUP-4', name:'Deepak Jain', company:'Cipla Regional Distributor', phone:'+91 98123 44556', email:'deepak.jain@cipladist.in', total:312000, outstanding:0, status:'Active'},
+  ],
+  employees: [
+    {id:'EMP-1', name:'Ravi Prakash', role:'Pharmacist', phone:'+91 91234 56780', joining:'2023-04-12', sales:184200, status:'Active'},
+    {id:'EMP-2', name:'Neha Singh', role:'Cashier', phone:'+91 92233 44556', joining:'2024-01-08', sales:96500, status:'Active'},
+    {id:'EMP-3', name:'Sanjay Mishra', role:'Manager', phone:'+91 93344 55667', joining:'2022-09-01', sales:0, status:'Active'},
+    {id:'EMP-4', name:'Pooja Rani', role:'Cashier', phone:'+91 94455 66778', joining:'2025-02-15', sales:64200, status:'On Leave'},
+  ],
+  prescriptions: [
+    {id:'RX-501', patient:'Rahul Sharma', doctor:'Dr. S.K. Verma', date:d(0), meds:'Azithromycin, Cetirizine', status:'Dispensed'},
+    {id:'RX-502', patient:'Sunita Devi', doctor:'Dr. Alka Jain', date:d(-1), meds:'Metformin, Atorvastatin', status:'Pending'},
+    {id:'RX-503', patient:'Amit Verma', doctor:'Dr. R.K. Singh', date:d(-2), meds:'Pantoprazole', status:'Partially Dispensed'},
+    {id:'RX-504', patient:'Kavita Singh', doctor:'Dr. S.K. Verma', date:d(-3), meds:'Ibuprofen, Vitamin D3', status:'Dispensed'},
+  ],
+  purchases: [
+    {id:'PUR-901', supplier:'Bihar Pharma Distributors', date:d(-2), items:6, amount:48500, payStatus:'Paid', status:'Received'},
+    {id:'PUR-902', supplier:'National Drug House', date:d(-5), items:12, amount:112400, payStatus:'Pending', status:'Received'},
+    {id:'PUR-903', supplier:'MedLine Wholesale Corp.', date:d(-8), items:4, amount:26800, payStatus:'Paid', status:'Received'},
+    {id:'PUR-904', supplier:'Cipla Regional Distributor', date:d(-1), items:9, amount:83200, payStatus:'Pending', status:'Ordered'},
+  ],
+  sales: [],
+  cart: [],
+  theme: 'light',
+  sidebarCollapsed:false
+};
+
+function seedSales(){
+  const custs = defaultData.customers;
+  const methods=['UPI','Cash','Card'];
+  const statuses=['Paid','Paid','Paid','Pending','Refunded'];
+  let arr=[];
+  let invNum=10482;
+  const sample=[
+    {c:'Rahul Sharma',items:4,amt:1250,pay:'UPI',day:0},
+    {c:'Priya Kumari',items:7,amt:2480,pay:'Cash',day:0},
+    {c:'Amit Verma',items:2,amt:640,pay:'Card',day:-1},
+    {c:'Sunita Devi',items:9,amt:4820,pay:'UPI',day:-1},
+    {c:'Manoj Kumar',items:1,amt:220,pay:'Cash',day:-2},
+    {c:'Kavita Singh',items:5,amt:1680,pay:'UPI',day:-2},
+    {c:'Walk-in Customer',items:3,amt:960,pay:'Cash',day:-3},
+    {c:'Rahul Sharma',items:6,amt:2140,pay:'Card',day:-4},
+    {c:'Priya Kumari',items:2,amt:480,pay:'UPI',day:-5},
+    {c:'Sunita Devi',items:8,amt:3650,pay:'Cash',day:-6},
+  ];
+  sample.forEach((s,i)=>{
+    arr.push({id:'INV-'+(invNum-i), customer:s.c, date:d(s.day), items:s.items, payment:s.pay, amount:s.amt, status: i===2?'Pending':(i===6?'Refunded':'Paid')});
+  });
+  return arr;
+}
+defaultData.sales = seedSales();
+
+/* ---------- STATE / PERSISTENCE ---------- */
+let state = loadState();
+function loadState(){
+  try{
+    const raw = localStorage.getItem('medicareProData');
+    if(raw){ const parsed = JSON.parse(raw); return Object.assign({}, defaultData, parsed, {cart:[]}); }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(defaultData));
+}
+function saveState(){
+  localStorage.setItem('medicareProData', JSON.stringify(state));
+}
+
+/* ---------- THEME ---------- */
+function applyTheme(){
+  document.documentElement.setAttribute('data-theme', state.theme);
+  document.body.setAttribute('data-theme', state.theme);
+  const icon = document.querySelector('#themeToggle i');
+  icon.className = state.theme==='dark' ? 'fa-solid fa-sun' : 'fa-regular fa-moon';
+  const sw = document.getElementById('settingsDarkSwitch');
+  if(sw) sw.classList.toggle('on', state.theme==='dark');
+}
+function toggleTheme(){
+  state.theme = state.theme==='dark' ? 'light' : 'dark';
+  applyTheme(); saveState();
+  drawSalesChart(currentRange);
+}
+document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+/* ---------- NAVIGATION ---------- */
+const pageTitles = {
+  dashboard:'Dashboard', pos:'Sales / POS', purchase:'Purchase Management', inventory:'Inventory',
+  medicines:'Medicines', suppliers:'Suppliers', customers:'Customers', prescriptions:'Prescriptions',
+  expiry:'Expiry Management', lowstock:'Low Stock', reports:'Reports', employees:'Employees', settings:'Settings'
+};
+function goto(pageId){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+pageId).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navEl = document.querySelector('.nav-item[data-page="'+pageId+'"]');
+  if(navEl) navEl.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[pageId];
+  document.getElementById('pageBreadcrumb').textContent = pageTitles[pageId];
+  closeAllDropdowns();
+  if(window.innerWidth<=1024){ document.getElementById('sidebar').classList.remove('mobile-open'); document.getElementById('sidebarOverlay').classList.remove('show'); }
+  renderAll();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav-item[data-page]').forEach(item=>{
+  item.addEventListener('click', ()=>goto(item.dataset.page));
+});
+document.querySelectorAll('[data-goto]').forEach(item=>{
+  item.addEventListener('click', ()=>{ goto(item.dataset.goto); closeAllDropdowns(); });
+});
+function openPOS(){ goto('pos'); }
+
+/* Sidebar collapse / mobile */
+const sidebar = document.getElementById('sidebar');
+const mainWrap = document.getElementById('mainWrap');
+document.getElementById('menuToggle').addEventListener('click', ()=>{
+  if(window.innerWidth<=1024){
+    sidebar.classList.toggle('mobile-open');
+    document.getElementById('sidebarOverlay').classList.toggle('show');
+  } else {
+    sidebar.classList.toggle('collapsed');
+    mainWrap.classList.toggle('collapsed');
+    state.sidebarCollapsed = sidebar.classList.contains('collapsed');
+    saveState();
+  }
+});
+document.getElementById('sidebarOverlay').addEventListener('click', ()=>{
+  sidebar.classList.remove('mobile-open');
+  document.getElementById('sidebarOverlay').classList.remove('show');
+});
+if(state.sidebarCollapsed && window.innerWidth>1024){ sidebar.classList.add('collapsed'); mainWrap.classList.add('collapsed'); }
+
+/* ---------- DROPDOWNS ---------- */
+function closeAllDropdowns(){
+  document.getElementById('notifPanel').classList.remove('show');
+  document.getElementById('userPanel').classList.remove('show');
+}
+document.getElementById('notifBtn').addEventListener('click', e=>{
+  e.stopPropagation();
+  document.getElementById('userPanel').classList.remove('show');
+  document.getElementById('notifPanel').classList.toggle('show');
+});
+document.getElementById('userChipBtn').addEventListener('click', e=>{
+  e.stopPropagation();
+  document.getElementById('notifPanel').classList.remove('show');
+  document.getElementById('userPanel').classList.toggle('show');
+});
+document.addEventListener('click', closeAllDropdowns);
+document.getElementById('btnAbout').addEventListener('click', ()=>{ openModal('modalAbout'); closeAllDropdowns(); });
+
+function renderNotifications(){
+  const lowCount = state.medicines.filter(m=>m.qty>0 && m.qty<=m.reorder).length;
+  const expCount = state.medicines.filter(m=>daysUntil(m.expiry)<=30).length;
+  const list = [
+    {icon:'fa-hourglass-end', color:'red', text:`${expCount} medicines are expiring soon`, time:'2 hours ago'},
+    {icon:'fa-triangle-exclamation', color:'amber', text:`${lowCount} medicines are low in stock`, time:'3 hours ago'},
+    {icon:'fa-truck-fast', color:'blue', text:'New purchase order received', time:'5 hours ago'},
+    {icon:'fa-bullseye', color:'green', text:'Daily sales target achieved', time:'Yesterday'},
+  ];
+  document.getElementById('notifList').innerHTML = list.map(n=>`
+    <div class="notif-item">
+      <div class="notif-icon badge-${n.color}"><i class="fa-solid ${n.icon}"></i></div>
+      <div class="notif-text"><p>${n.text}</p><span>${n.time}</span></div>
+    </div>`).join('');
+  document.getElementById('navExpiryBadge').textContent = expCount;
+  document.getElementById('navLowBadge').textContent = lowCount;
+}
+
+/* ---------- TOASTS ---------- */
+function showToast(msg, type='success'){
+  const stack = document.getElementById('toastStack');
+  const icon = type==='success' ? 'fa-circle-check' : (type==='warn' ? 'fa-triangle-exclamation' : 'fa-circle-xmark');
+  const el = document.createElement('div');
+  el.className = 'toast ' + (type==='success'?'':type);
+  el.innerHTML = `<i class="fa-solid ${icon}"></i><span>${msg}</span>`;
+  stack.appendChild(el);
+  setTimeout(()=>{ el.classList.add('hide'); setTimeout(()=>el.remove(),300); }, 3200);
+}
+
+/* ---------- MODALS ---------- */
+function openModal(id){
+  document.getElementById(id).classList.add('show');
+  populateSelects();
+}
+function closeModal(id){ document.getElementById(id).classList.remove('show'); }
+document.querySelectorAll('.modal-overlay').forEach(m=>{
+  m.addEventListener('click', e=>{ if(e.target===m) closeModal(m.id); });
+});
+function confirmAction(text, cb){
+  document.getElementById('confirmText').textContent = text;
+  const btn = document.getElementById('confirmActionBtn');
+  const newBtn = btn.cloneNode(true);
+  btn.parentNode.replaceChild(newBtn, btn);
+  newBtn.addEventListener('click', ()=>{ cb(); closeModal('modalConfirm'); });
+  openModal('modalConfirm');
+}
+
+/* ---------- HELPERS ---------- */
+function daysUntil(iso){
+  const diff = (new Date(iso) - today) / 86400000;
+  return Math.ceil(diff);
+}
+function stockStatus(m){
+  if(m.qty<=0) return 'Out of Stock';
+  if(daysUntil(m.expiry)<=30) return 'Expiring Soon';
+  if(m.qty<=m.reorder) return 'Low Stock';
+  return 'In Stock';
+}
+function statusBadgeClass(s){
+  return {'In Stock':'badge-green','Low Stock':'badge-amber','Out of Stock':'badge-red','Expiring Soon':'badge-red',
+    'Paid':'badge-green','Pending':'badge-amber','Refunded':'badge-gray','Active':'badge-green','VIP':'badge-blue','On Leave':'badge-amber',
+    'Dispensed':'badge-green','Partially Dispensed':'badge-amber','Received':'badge-green','Ordered':'badge-blue'}[s] || 'badge-gray';
+}
+
+/* ---------- POPULATE SELECTS ---------- */
+function populateSelects(){
+  const supSel = document.getElementById('pur_supplier');
+  if(supSel) supSel.innerHTML = state.suppliers.map(s=>`<option>${s.company}</option>`).join('');
+  ['pur_medicine','pre_medicine'].forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.innerHTML = state.medicines.map(m=>`<option>${m.name}</option>`).join('');
+  });
+  const catFilter = document.getElementById('invCategoryFilter');
+  if(catFilter && catFilter.options.length<=1){
+    const cats = [...new Set(state.medicines.map(m=>m.category))];
+    catFilter.innerHTML = '<option value="">All Categories</option>' + cats.map(c=>`<option>${c}</option>`).join('');
+  }
+}
+
+/* ===================== DASHBOARD ===================== */
+function renderDashboard(){
+  const totalToday = state.sales.filter(s=>s.date===d(0)).reduce((a,s)=>a+s.amount,0);
+  const totalOrders = state.sales.length;
+  const totalMeds = state.medicines.length;
+  const lowStock = state.medicines.filter(m=>m.qty>0 && m.qty<=m.reorder).length;
+  const expiring = state.medicines.filter(m=>daysUntil(m.expiry)<=30 && daysUntil(m.expiry)>=0).length;
+  const totalCustomers = state.customers.length;
+
+  const kpis = [
+    {icon:'fa-indian-rupee-sign', color:'blue', label:"Today's Sales", value: inr(totalToday||48650), trend:'+12.5%', trendType:'up'},
+    {icon:'fa-cart-shopping', color:'green', label:'Total Orders', value: totalOrders, trend:'+8.2%', trendType:'up'},
+    {icon:'fa-pills', color:'blue', label:'Total Medicines', value: totalMeds, trend:'', trendType:''},
+    {icon:'fa-triangle-exclamation', color:'amber', label:'Low Stock', value: lowStock, trend:'Reorder', trendType:'warn'},
+    {icon:'fa-hourglass-end', color:'red', label:'Expiring Soon', value: expiring, trend:'Action', trendType:'down'},
+    {icon:'fa-users', color:'green', label:'Total Customers', value: totalCustomers, trend:'+6.4%', trendType:'up'},
+  ];
+  document.getElementById('kpiGrid').innerHTML = kpis.map(k=>`
+    <div class="kpi-card">
+      <div class="kpi-top">
+        <div class="kpi-icon badge-${k.color}"><i class="fa-solid ${k.icon}"></i></div>
+        ${k.trend ? `<div class="kpi-trend trend-${k.trendType}"><i class="fa-solid fa-arrow-${k.trendType==='down'?'down':'up'}"></i>${k.trend}</div>` : ''}
+      </div>
+      <div class="kpi-value">${k.value}</div>
+      <div class="kpi-label">${k.label}</div>
+    </div>`).join('');
+
+  const txBody = document.getElementById('recentTxBody');
+  txBody.innerHTML = state.sales.slice(0,8).map(s=>`
+    <tr>
+      <td data-label="Invoice"><span class="cell-main">${s.id}</span></td>
+      <td data-label="Customer">${s.customer}</td>
+      <td data-label="Date">${fmtDate(s.date)}</td>
+      <td data-label="Items">${s.items} Items</td>
+      <td data-label="Payment">${s.payment}</td>
+      <td data-label="Amount"><span class="cell-main">${inr(s.amount)}</span></td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(s.status)}">${s.status}</span></td>
+      <td data-label="Action"><div class="row-actions">
+        <button onclick="viewInvoice('${s.id}')"><i class="fa-solid fa-eye"></i></button>
+        <button onclick="showToast('Invoice sent to printer','success')"><i class="fa-solid fa-print"></i></button>
+        <button onclick="showToast('Invoice downloaded','success')"><i class="fa-solid fa-download"></i></button>
+      </div></td>
+    </tr>`).join('');
+
+  document.getElementById('heroDate').textContent = today.toLocaleDateString('en-IN',{weekday:'long', day:'2-digit', month:'long', year:'numeric'});
+  const hr = today.getHours ? new Date().getHours() : 14;
+  document.getElementById('greetingText').textContent = (hr<12?'Good Morning, Admin 👋':hr<17?'Good Afternoon, Admin 👋':'Good Evening, Admin 👋');
+}
+
+/* ---------- CHART ---------- */
+let currentRange='7d';
+function rangeData(range){
+  let n = range==='7d'?7 : range==='30d'?30 : range==='3m'?12 : 12;
+  let labelFn = (i)=> range==='7d' ? new Date(new Date(today).setDate(today.getDate()-(n-1-i))).toLocaleDateString('en-IN',{weekday:'short'})
+    : range==='30d' ? (i+1)+'' 
+    : range==='3m' ? 'W'+(i+1)
+    : new Date(2026,i,1).toLocaleDateString('en-IN',{month:'short'});
+  let base = range==='7d'?32000 : range==='30d'?9000 : range==='3m'?210000 : 780000;
+  let rev=[], ord=[];
+  for(let i=0;i<n;i++){
+    let variance = 0.55 + Math.sin(i*1.3)*0.22 + Math.random()*0.28;
+    rev.push(Math.round(base*variance));
+    ord.push(Math.round((base*variance)/380));
+  }
+  return {labels:Array.from({length:n},(_,i)=>labelFn(i)), rev, ord};
+}
+function drawSalesChart(range){
+  currentRange = range;
+  const data = rangeData(range);
+  const canvas = document.getElementById('salesChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio||1;
+  const w = canvas.clientWidth || canvas.parentElement.clientWidth-44;
+  const h = 230;
+  canvas.width = w*dpr; canvas.height = h*dpr;
+  canvas.style.width=w+'px'; canvas.style.height=h+'px';
+  ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+  const styles = getComputedStyle(document.documentElement);
+  const primary = styles.getPropertyValue('--primary').trim();
+  const emerald = styles.getPropertyValue('--emerald').trim();
+  const gridColor = styles.getPropertyValue('--border').trim();
+  const textColor = styles.getPropertyValue('--text-soft').trim();
+
+  const padL=40, padR=10, padT=14, padB=26;
+  const cw = w-padL-padR, ch = h-padT-padB;
+  const maxRev = Math.max(...data.rev)*1.15;
+
+  // grid
+  ctx.strokeStyle = gridColor; ctx.lineWidth=1; ctx.font='11px Inter';
+  ctx.fillStyle = textColor;
+  for(let i=0;i<=4;i++){
+    const y = padT + ch - (ch*i/4);
+    ctx.beginPath(); ctx.moveTo(padL,y); ctx.lineTo(w-padR,y); ctx.stroke();
+    ctx.fillText(Math.round(maxRev*i/4/1000)+'k', 4, y+3);
+  }
+  // revenue line + area
+  const stepX = cw/(data.rev.length-1||1);
+  function drawLine(arr, color, maxVal, fillAlpha){
+    ctx.beginPath();
+    arr.forEach((v,i)=>{
+      const x = padL + i*stepX;
+      const y = padT + ch - (v/maxVal)*ch;
+      if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+    });
+    ctx.strokeStyle=color; ctx.lineWidth=2.5; ctx.lineJoin='round'; ctx.stroke();
+    if(fillAlpha){
+      ctx.lineTo(padL+(arr.length-1)*stepX, padT+ch);
+      ctx.lineTo(padL, padT+ch);
+      ctx.closePath();
+      ctx.fillStyle = color+fillAlpha;
+      ctx.fill();
+    }
+    arr.forEach((v,i)=>{
+      const x = padL + i*stepX;
+      const y = padT + ch - (v/maxVal)*ch;
+      ctx.beginPath(); ctx.arc(x,y,3,0,7); ctx.fillStyle=color; ctx.fill();
+    });
+  }
+  const maxOrd = Math.max(...data.ord)*1.4;
+  drawLine(data.rev, primary, maxRev, '22');
+  drawLine(data.ord.map(o=>o*(maxRev/maxOrd)), emerald, maxRev, false);
+
+  // x labels (sparse for 30d)
+  ctx.fillStyle = textColor; ctx.textAlign='center';
+  const skip = data.labels.length>15 ? Math.ceil(data.labels.length/8) : 1;
+  data.labels.forEach((lb,i)=>{
+    if(i%skip===0){ ctx.fillText(lb, padL+i*stepX, h-8); }
+  });
+  ctx.textAlign='left';
+
+  const totalRev = data.rev.reduce((a,b)=>a+b,0);
+  const totalOrd = data.ord.reduce((a,b)=>a+b,0);
+  document.getElementById('statRevenue').textContent = inr(totalRev);
+  document.getElementById('statOrders').textContent = totalOrd;
+  document.getElementById('statAOV').textContent = inr(Math.round(totalRev/(totalOrd||1)));
+  const rangeLabel = {'7d':'last 7 days','30d':'last 30 days','3m':'last 3 months','1y':'last 1 year'}[range];
+  document.getElementById('chartSubtitle').textContent = 'Revenue trend for the ' + rangeLabel;
+}
+document.getElementById('chartFilters').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#chartFilters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  drawSalesChart(btn.dataset.range);
+});
+
+/* ===================== POS ===================== */
+function renderPOSResults(filter=''){
+  const q = filter.toLowerCase();
+  const results = state.medicines.filter(m=> !q || m.name.toLowerCase().includes(q) || m.generic.toLowerCase().includes(q) || m.id.toLowerCase().includes(q));
+  const wrap = document.getElementById('posResults');
+  if(results.length===0){ wrap.innerHTML = `<div class="empty-state" style="grid-column:1/-1;"><i class="fa-solid fa-magnifying-glass"></i><h4>No medicines found</h4><p>Try a different search term</p></div>`; return; }
+  wrap.innerHTML = results.map(m=>`
+    <div class="med-tile" onclick="addToCart('${m.id}')">
+      <div class="med-tile-top"><h4>${m.name}</h4><span class="badge ${statusBadgeClass(stockStatus(m))}" style="font-size:10px;">${stockStatus(m)}</span></div>
+      <div class="brand">${m.manufacturer} · Batch ${m.batch}</div>
+      <div class="med-tile-meta">
+        <div><div class="med-tile-price">${inr(m.selling)}</div><div class="mrp">MRP ${inr(m.mrp)}</div></div>
+        <div style="text-align:right;font-size:11px;color:var(--text-soft);">Stock: ${m.qty}<br>Exp: ${fmtDate(m.expiry)}</div>
+      </div>
+    </div>`).join('');
+}
+document.getElementById('posSearch').addEventListener('input', e=>renderPOSResults(e.target.value));
+
+function addToCart(medId){
+  const med = state.medicines.find(m=>m.id===medId);
+  if(!med) return;
+  if(med.qty<=0){ showToast('This medicine is out of stock','error'); return; }
+  const existing = state.cart.find(c=>c.id===medId);
+  if(existing){
+    if(existing.qty>=med.qty){ showToast('No more stock available','warn'); return; }
+    existing.qty++;
+  } else {
+    state.cart.push({id:med.id, name:med.name, batch:med.batch, price:med.selling, gst:med.gst, qty:1});
+  }
+  renderCart();
+}
+function changeQty(id, delta){
+  const item = state.cart.find(c=>c.id===id);
+  const med = state.medicines.find(m=>m.id===id);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty<=0){ state.cart = state.cart.filter(c=>c.id!==id); }
+  else if(med && item.qty>med.qty){ item.qty = med.qty; showToast('No more stock available','warn'); }
+  renderCart();
+}
+function removeFromCart(id){ state.cart = state.cart.filter(c=>c.id!==id); renderCart(); }
+
+function renderCart(){
+  const list = document.getElementById('cartList');
+  document.getElementById('cartCount').textContent = state.cart.reduce((a,c)=>a+c.qty,0) + ' items';
+  if(state.cart.length===0){
+    list.innerHTML = `<div class="empty-cart"><i class="fa-solid fa-cart-shopping"></i><p>Your cart is empty</p><span style="font-size:12px;">Search and add medicines to begin a sale</span></div>`;
+  } else {
+    list.innerHTML = state.cart.map(c=>`
+      <div class="cart-item">
+        <div class="cart-item-info"><h5>${c.name}</h5><span>Batch ${c.batch} · ${inr(c.price)} ea</span></div>
+        <div class="qty-ctrl"><button onclick="changeQty('${c.id}',-1)">−</button><span>${c.qty}</span><button onclick="changeQty('${c.id}',1)">+</button></div>
+        <div class="cart-item-price">${inr(c.price*c.qty)}</div>
+        <button class="remove-btn" onclick="removeFromCart('${c.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div>`).join('');
+  }
+  const subtotal = state.cart.reduce((a,c)=>a+c.price*c.qty,0);
+  const discount = subtotal>1000 ? subtotal*0.02 : 0;
+  const gst = state.cart.reduce((a,c)=>a+ (c.price*c.qty)*(c.gst/100),0);
+  const total = subtotal - discount + gst;
+  document.getElementById('sumSubtotal').textContent = inr(subtotal);
+  document.getElementById('sumDiscount').textContent = '- ' + inr(discount);
+  document.getElementById('sumGST').textContent = '+ ' + inr(gst);
+  document.getElementById('sumTotal').textContent = inr(total);
+}
+document.getElementById('payMethods').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#payMethods button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+});
+function completeSale(){
+  if(state.cart.length===0){ showToast('Add at least one medicine to the cart','error'); return; }
+  const subtotal = state.cart.reduce((a,c)=>a+c.price*c.qty,0);
+  const discount = subtotal>1000 ? subtotal*0.02 : 0;
+  const gst = state.cart.reduce((a,c)=>a+ (c.price*c.qty)*(c.gst/100),0);
+  const total = Math.round((subtotal - discount + gst)*100)/100;
+  const method = document.querySelector('#payMethods button.active').dataset.method;
+  const invId = uid('INV');
+  state.cart.forEach(c=>{
+    const med = state.medicines.find(m=>m.id===c.id);
+    if(med) med.qty = Math.max(0, med.qty - c.qty);
+  });
+  const totalItems = state.cart.reduce((a,c)=>a+c.qty,0);
+  state.sales.unshift({id:invId, customer:'Walk-in Customer', date:d(0), items:totalItems, payment:method, amount:total, status:'Paid', lines: JSON.parse(JSON.stringify(state.cart)), subtotal, discount, gst});
+  document.getElementById('successInvoice').textContent = invId;
+  document.getElementById('successAmount').textContent = inr(total);
+  document.getElementById('successMethod').textContent = method;
+  state.cart = [];
+  renderCart();
+  saveState();
+  renderAll();
+  openModal('modalSuccess');
+  showToast('Sale completed successfully','success');
+}
+function printInvoiceFromSuccess(){
+  const invId = document.getElementById('successInvoice').textContent;
+  closeModal('modalSuccess');
+  viewInvoice(invId);
+}
+
+/* ===================== INVOICE PREVIEW ===================== */
+function viewInvoice(invId){
+  const sale = state.sales.find(s=>s.id===invId);
+  if(!sale) return;
+  const lines = sale.lines || [{name:'Assorted Medicines', batch:'-', qty:sale.items, price: Math.round(sale.amount/sale.items), gst:12}];
+  document.getElementById('invoiceBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:18px;">
+      <h2 style="font-size:20px;font-weight:800;">MediCare Pro</h2>
+      <p class="text-soft" style="font-size:12px;">Pharmacy Management System</p>
+      <p class="text-soft" style="font-size:12px;">12, MG Road, Patna, Bihar - 800001 · GSTIN: 10ABCDE1234F1Z5</p>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-bottom:16px;font-size:13px;">
+      <div><b>Invoice No:</b> ${sale.id}<br><b>Date:</b> ${fmtDate(sale.date)}</div>
+      <div style="text-align:right;"><b>Customer:</b> ${sale.customer}<br><b>Payment:</b> ${sale.payment}</div>
+    </div>
+    <div class="table-scroll"><table><thead><tr><th>Medicine</th><th>Batch</th><th>Qty</th><th>Price</th><th>GST</th><th>Total</th></tr></thead>
+    <tbody>${lines.map(l=>`<tr><td>${l.name}</td><td>${l.batch}</td><td>${l.qty}</td><td>${inr(l.price)}</td><td>${l.gst||12}%</td><td>${inr(l.price*l.qty*(1+(l.gst||12)/100))}</td></tr>`).join('')}</tbody></table></div>
+    <div style="margin-top:16px;margin-left:auto;max-width:260px;">
+      <div class="cart-summary-row"><span>Subtotal</span><span>${inr(sale.subtotal||sale.amount*0.9)}</span></div>
+      <div class="cart-summary-row"><span>Discount</span><span>- ${inr(sale.discount||0)}</span></div>
+      <div class="cart-summary-row"><span>GST</span><span>+ ${inr(sale.gst||sale.amount*0.1)}</span></div>
+      <div class="cart-summary-row total"><span>Grand Total</span><span>${inr(sale.amount)}</span></div>
+    </div>
+    <p style="text-align:center;margin-top:20px;color:var(--text-soft);font-size:12.5px;">Thank you for choosing our pharmacy.</p>
+  `;
+  openModal('modalInvoice');
+}
+
+/* ===================== INVENTORY ===================== */
+let invPage=1; const invPageSize=8;
+function renderInventoryStats(){
+  const meds = state.medicines;
+  const stats = [
+    {label:'Total Medicines', value:meds.length},
+    {label:'In Stock', value:meds.filter(m=>stockStatus(m)==='In Stock').length},
+    {label:'Low Stock', value:meds.filter(m=>stockStatus(m)==='Low Stock').length},
+    {label:'Out of Stock', value:meds.filter(m=>stockStatus(m)==='Out of Stock').length},
+    {label:'Expiring Soon', value:meds.filter(m=>stockStatus(m)==='Expiring Soon').length},
+  ];
+  document.getElementById('inventoryStats').innerHTML = stats.map(s=>`<div class="stat-box"><div class="num">${s.value}</div><div class="lbl">${s.label}</div></div>`).join('');
+}
+function renderInventoryTable(){
+  const search = (document.getElementById('invSearch').value||'').toLowerCase();
+  const cat = document.getElementById('invCategoryFilter').value;
+  const statusF = document.getElementById('invStatusFilter').value;
+  const sort = document.getElementById('invSort').value;
+  let list = state.medicines.filter(m=>{
+    if(search && !m.name.toLowerCase().includes(search)) return false;
+    if(cat && m.category!==cat) return false;
+    if(statusF && stockStatus(m)!==statusF) return false;
+    return true;
+  });
+  if(sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name));
+  if(sort==='stock') list.sort((a,b)=>a.qty-b.qty);
+  if(sort==='expiry') list.sort((a,b)=>new Date(a.expiry)-new Date(b.expiry));
+
+  const totalPages = Math.max(1, Math.ceil(list.length/invPageSize));
+  if(invPage>totalPages) invPage=totalPages;
+  const pageItems = list.slice((invPage-1)*invPageSize, invPage*invPageSize);
+
+  const supplierFor = ()=> state.suppliers[Math.floor(Math.random()*state.suppliers.length)]?.company || 'N/A';
+  document.getElementById('inventoryBody').innerHTML = pageItems.length ? pageItems.map(m=>{
+    const status = stockStatus(m);
+    const pct = Math.min(100, Math.round((m.qty/(m.reorder*3||1))*100));
+    return `<tr>
+      <td data-label="Medicine"><span class="cell-main">${m.name}</span><div class="cell-sub">${m.strength}</div></td>
+      <td data-label="Category">${m.category}</td>
+      <td data-label="Batch">${m.batch}</td>
+      <td data-label="Supplier">${m._supplier || (m._supplier=supplierFor())}</td>
+      <td data-label="Purchase Price">${inr(m.purchase)}</td>
+      <td data-label="MRP">${inr(m.mrp)}</td>
+      <td data-label="Stock">${m.qty}<div class="stock-bar"><span style="width:${pct}%;background:${status==='Out of Stock'?'var(--red)':status==='Low Stock'?'var(--amber)':'var(--emerald)'}"></span></div></td>
+      <td data-label="Expiry">${fmtDate(m.expiry)}</td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(status)}">${status}</span></td>
+      <td data-label="Actions"><div class="row-actions">
+        <button onclick="openMedicineModal('${m.id}')"><i class="fa-solid fa-pen"></i></button>
+        <button class="danger" onclick="deleteMedicine('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="10"><div class="empty-state"><i class="fa-solid fa-box-open"></i><h4>No medicines found</h4><p>Try adjusting your filters</p></div></td></tr>`;
+
+  document.getElementById('invPageInfo').textContent = `Showing ${pageItems.length} of ${list.length} medicines`;
+  const btns = document.getElementById('invPageBtns');
+  btns.innerHTML='';
+  for(let i=1;i<=totalPages;i++){
+    const b = document.createElement('button');
+    b.textContent=i; if(i===invPage) b.classList.add('active');
+    b.onclick=()=>{ invPage=i; renderInventoryTable(); };
+    btns.appendChild(b);
+  }
+}
+['invSearch','invCategoryFilter','invStatusFilter','invSort'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', ()=>{ invPage=1; renderInventoryTable(); });
+});
+
+/* ===================== MEDICINES ===================== */
+function renderMedicines(){
+  const search = (document.getElementById('medSearch').value||'').toLowerCase();
+  const list = state.medicines.filter(m=>!search||m.name.toLowerCase().includes(search)||m.generic.toLowerCase().includes(search));
+  document.getElementById('medicinesBody').innerHTML = list.length ? list.map(m=>`
+    <tr>
+      <td data-label="Medicine"><span class="cell-main">${m.name}</span><div class="cell-sub">${m.generic}</div></td>
+      <td data-label="Manufacturer">${m.manufacturer}</td>
+      <td data-label="Category">${m.category}</td>
+      <td data-label="Strength">${m.strength}</td>
+      <td data-label="HSN">${m.hsn}</td>
+      <td data-label="GST">${m.gst}%</td>
+      <td data-label="MRP">${inr(m.mrp)}</td>
+      <td data-label="Stock"><span class="badge ${statusBadgeClass(stockStatus(m))}">${m.qty}</span></td>
+      <td data-label="Reorder">${m.reorder}</td>
+      <td data-label="Expiry">${fmtDate(m.expiry)}</td>
+      <td data-label="Actions"><div class="row-actions">
+        <button onclick="openMedicineModal('${m.id}')"><i class="fa-solid fa-pen"></i></button>
+        <button class="danger" onclick="deleteMedicine('${m.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('') : `<tr><td colspan="11"><div class="empty-state"><i class="fa-solid fa-pills"></i><h4>No medicines yet</h4><p>Click "Add Medicine" to create your first record</p></div></td></tr>`;
+}
+document.getElementById('medSearch').addEventListener('input', renderMedicines);
+
+function openMedicineModal(id){
+  const form = document.getElementById('medicineForm');
+  form.querySelectorAll('.field').forEach(f=>f.classList.remove('invalid'));
+  if(id){
+    const m = state.medicines.find(x=>x.id===id);
+    document.getElementById('medicineModalTitle').textContent = 'Edit Medicine';
+    document.getElementById('med_id').value=m.id;
+    document.getElementById('med_name').value=m.name;
+    document.getElementById('med_generic').value=m.generic;
+    document.getElementById('med_manufacturer').value=m.manufacturer;
+    document.getElementById('med_category').value=m.category;
+    document.getElementById('med_strength').value=m.strength;
+    document.getElementById('med_dosage').value=m.dosage;
+    document.getElementById('med_batch').value=m.batch;
+    document.getElementById('med_purchase').value=m.purchase;
+    document.getElementById('med_mrp').value=m.mrp;
+    document.getElementById('med_selling').value=m.selling;
+    document.getElementById('med_gst').value=m.gst;
+    document.getElementById('med_qty').value=m.qty;
+    document.getElementById('med_reorder').value=m.reorder;
+    document.getElementById('med_expiry').value=m.expiry;
+  } else {
+    document.getElementById('medicineModalTitle').textContent = 'Add Medicine';
+    form.reset();
+    document.getElementById('med_id').value='';
+    document.getElementById('med_gst').value=12;
+    document.getElementById('med_reorder').value=20;
+  }
+  openModal('modalMedicine');
+}
+function saveMedicine(){
+  const fields = [
+    {id:'f_med_name', val: document.getElementById('med_name').value.trim()},
+    {id:'f_med_generic', val: document.getElementById('med_generic').value.trim()},
+    {id:'f_med_purchase', val: document.getElementById('med_purchase').value},
+    {id:'f_med_mrp', val: document.getElementById('med_mrp').value},
+    {id:'f_med_qty', val: document.getElementById('med_qty').value},
+    {id:'f_med_expiry', val: document.getElementById('med_expiry').value},
+  ];
+  let valid = true;
+  fields.forEach(f=>{
+    const el = document.getElementById(f.id);
+    if(!f.val){ el.classList.add('invalid'); valid=false; } else { el.classList.remove('invalid'); }
+  });
+  if(!valid){ showToast('Please fill all required fields','error'); return; }
+
+  const id = document.getElementById('med_id').value;
+  const data = {
+    name: document.getElementById('med_name').value.trim(),
+    generic: document.getElementById('med_generic').value.trim(),
+    manufacturer: document.getElementById('med_manufacturer').value.trim() || 'Generic Pharma',
+    category: document.getElementById('med_category').value,
+    strength: document.getElementById('med_strength').value.trim(),
+    dosage: document.getElementById('med_dosage').value,
+    batch: document.getElementById('med_batch').value.trim() || uid('BT'),
+    hsn:'3004',
+    purchase: parseFloat(document.getElementById('med_purchase').value),
+    mrp: parseFloat(document.getElementById('med_mrp').value),
+    selling: parseFloat(document.getElementById('med_selling').value) || parseFloat(document.getElementById('med_mrp').value),
+    gst: parseFloat(document.getElementById('med_gst').value) || 12,
+    qty: parseInt(document.getElementById('med_qty').value),
+    reorder: parseInt(document.getElementById('med_reorder').value) || 20,
+    expiry: document.getElementById('med_expiry').value,
+  };
+  if(id){
+    const idx = state.medicines.findIndex(m=>m.id===id);
+    state.medicines[idx] = Object.assign(state.medicines[idx], data);
+    showToast('Medicine updated successfully','success');
+  } else {
+    data.id = uid('MED');
+    state.medicines.push(data);
+    showToast('Medicine added successfully','success');
+  }
+  saveState();
+  closeModal('modalMedicine');
+  renderAll();
+}
+function deleteMedicine(id){
+  confirmAction('This will permanently delete this medicine from inventory.', ()=>{
+    state.medicines = state.medicines.filter(m=>m.id!==id);
+    saveState(); renderAll();
+    showToast('Medicine deleted successfully','success');
+  });
+}
+
+/* ===================== PURCHASE ===================== */
+function renderPurchase(){
+  const total = state.purchases.reduce((a,p)=>a+p.amount,0);
+  const pending = state.purchases.filter(p=>p.payStatus==='Pending').length;
+  const thisMonth = state.purchases.reduce((a,p)=>a+p.amount,0);
+  document.getElementById('purchaseStats').innerHTML = [
+    {label:'Total Purchases', value:inr(total)},
+    {label:'Pending Payments', value:pending},
+    {label:'Suppliers', value:state.suppliers.length},
+    {label:'Purchase This Month', value:inr(thisMonth)},
+  ].map(s=>`<div class="stat-box"><div class="num">${s.value}</div><div class="lbl">${s.label}</div></div>`).join('');
+
+  document.getElementById('purchaseBody').innerHTML = state.purchases.map(p=>`
+    <tr>
+      <td data-label="ID"><span class="cell-main">${p.id}</span></td>
+      <td data-label="Supplier">${p.supplier}</td>
+      <td data-label="Date">${fmtDate(p.date)}</td>
+      <td data-label="Items">${p.items}</td>
+      <td data-label="Amount">${inr(p.amount)}</td>
+      <td data-label="Payment"><span class="badge ${statusBadgeClass(p.payStatus)}">${p.payStatus}</span></td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(p.status)}">${p.status}</span></td>
+      <td data-label="Action"><div class="row-actions"><button onclick="showToast('Purchase order details opened','success')"><i class="fa-solid fa-eye"></i></button></div></td>
+    </tr>`).join('');
+}
+function savePurchase(){
+  const supplier = document.getElementById('pur_supplier').value;
+  const qty = parseInt(document.getElementById('pur_qty').value)||0;
+  const price = parseFloat(document.getElementById('pur_price').value)||0;
+  const medName = document.getElementById('pur_medicine').value;
+  if(!supplier || qty<=0){ showToast('Please fill supplier and quantity','error'); return; }
+  const amount = qty*price*1.12;
+  state.purchases.unshift({id:uid('PUR'), supplier, date:d(0), items:qty, amount:Math.round(amount), payStatus:'Pending', status:'Ordered'});
+  const med = state.medicines.find(m=>m.name===medName);
+  if(med){ med.qty += qty; if(document.getElementById('pur_expiry').value) med.expiry = document.getElementById('pur_expiry').value; }
+  saveState(); closeModal('modalPurchase'); renderAll();
+  showToast('Purchase created successfully','success');
+}
+
+/* ===================== SUPPLIERS ===================== */
+function renderSuppliers(){
+  document.getElementById('suppliersBody').innerHTML = state.suppliers.map(s=>`
+    <tr>
+      <td data-label="Supplier"><span class="cell-main">${s.name}</span></td>
+      <td data-label="Company">${s.company}</td>
+      <td data-label="Phone">${s.phone}</td>
+      <td data-label="Email">${s.email}</td>
+      <td data-label="Total Purchases">${inr(s.total)}</td>
+      <td data-label="Outstanding">${s.outstanding>0?`<span class="badge badge-amber">${inr(s.outstanding)}</span>`:'—'}</td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(s.status)}">${s.status}</span></td>
+      <td data-label="Action"><div class="row-actions">
+        <button onclick="showToast('Supplier details opened','success')"><i class="fa-solid fa-eye"></i></button>
+        <button class="danger" onclick="deleteSupplier('${s.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
+}
+function saveSupplier(){
+  const name = document.getElementById('sup_name').value.trim();
+  const phone = document.getElementById('sup_phone').value.trim();
+  if(!name||!phone){ showToast('Name and phone are required','error'); return; }
+  state.suppliers.push({id:uid('SUP'), name, company:document.getElementById('sup_company').value.trim()||name, phone, email:document.getElementById('sup_email').value.trim(), total:0, outstanding:0, status:'Active'});
+  saveState(); closeModal('modalSupplier'); renderAll();
+  ['sup_name','sup_company','sup_phone','sup_email','sup_gstin','sup_address'].forEach(id=>document.getElementById(id).value='');
+  showToast('Supplier added successfully','success');
+}
+function deleteSupplier(id){
+  confirmAction('This will remove the supplier record permanently.', ()=>{
+    state.suppliers = state.suppliers.filter(s=>s.id!==id);
+    saveState(); renderAll(); showToast('Supplier deleted successfully','success');
+  });
+}
+
+/* ===================== CUSTOMERS ===================== */
+function renderCustomers(){
+  document.getElementById('customerModalTitle').textContent='Add Customer';
+  document.getElementById('customersBody').innerHTML = state.customers.map(c=>`
+    <tr>
+      <td data-label="Customer"><span class="cell-main">${c.name}</span></td>
+      <td data-label="Phone">${c.phone}</td>
+      <td data-label="Email">${c.email}</td>
+      <td data-label="Total Purchases">${inr(c.total)}</td>
+      <td data-label="Last Purchase">${fmtDate(c.last)}</td>
+      <td data-label="Outstanding">${c.outstanding>0?`<span class="badge badge-amber">${inr(c.outstanding)}</span>`:'—'}</td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(c.status)}">${c.status}</span></td>
+      <td data-label="Action"><div class="row-actions">
+        <button onclick="viewCustomerProfile('${c.id}')"><i class="fa-solid fa-eye"></i></button>
+        <button class="danger" onclick="deleteCustomer('${c.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
+}
+function saveCustomer(){
+  const name = document.getElementById('cus_name').value.trim();
+  const phone = document.getElementById('cus_phone').value.trim();
+  if(!name||!phone){ showToast('Name and phone are required','error'); return; }
+  state.customers.push({id:uid('CUS'), name, phone, email:document.getElementById('cus_email').value.trim(), total:0, last:d(0), outstanding:0, status:'Active'});
+  saveState(); closeModal('modalCustomer'); renderAll();
+  ['cus_name','cus_phone','cus_email'].forEach(id=>document.getElementById(id).value='');
+  showToast('Customer added successfully','success');
+}
+function deleteCustomer(id){
+  confirmAction('This will remove the customer record permanently.', ()=>{
+    state.customers = state.customers.filter(c=>c.id!==id);
+    saveState(); renderAll(); showToast('Customer updated successfully','success');
+  });
+}
+function viewCustomerProfile(id){
+  const c = state.customers.find(x=>x.id===id);
+  const purchases = state.sales.filter(s=>s.customer===c.name);
+  document.getElementById('customerProfileBody').innerHTML = `
+    <div style="display:flex;gap:16px;align-items:center;margin-bottom:20px;">
+      <div class="user-avatar" style="width:56px;height:56px;font-size:18px;">${c.name.split(' ').map(n=>n[0]).join('').slice(0,2)}</div>
+      <div><h3 style="font-size:17px;">${c.name}</h3><p class="text-soft" style="font-size:12.5px;">${c.phone} · ${c.email}</p></div>
+    </div>
+    <div class="stat-strip" style="grid-template-columns:repeat(3,1fr);">
+      <div class="stat-box"><div class="num">${inr(c.total)}</div><div class="lbl">Total Spent</div></div>
+      <div class="stat-box"><div class="num">${purchases.length}</div><div class="lbl">Number of Orders</div></div>
+      <div class="stat-box"><div class="num">${fmtDate(c.last)}</div><div class="lbl">Last Purchase</div></div>
+    </div>
+    <h4 style="margin:18px 0 10px;font-size:14px;">Recent Medicines</h4>
+    <div class="table-scroll"><table><thead><tr><th>Invoice</th><th>Date</th><th>Items</th><th>Amount</th><th>Status</th></tr></thead>
+    <tbody>${purchases.length? purchases.map(p=>`<tr><td>${p.id}</td><td>${fmtDate(p.date)}</td><td>${p.items}</td><td>${inr(p.amount)}</td><td><span class="badge ${statusBadgeClass(p.status)}">${p.status}</span></td></tr>`).join('') : '<tr><td colspan="5" style="text-align:center;color:var(--text-soft);padding:20px;">No purchase history yet</td></tr>'}</tbody></table></div>
+  `;
+  openModal('modalCustomerProfile');
+}
+
+/* ===================== PRESCRIPTIONS ===================== */
+function renderPrescriptions(){
+  document.getElementById('prescriptionsBody').innerHTML = state.prescriptions.map(p=>`
+    <tr>
+      <td data-label="ID"><span class="cell-main">${p.id}</span></td>
+      <td data-label="Patient">${p.patient}</td>
+      <td data-label="Doctor">${p.doctor}</td>
+      <td data-label="Date">${fmtDate(p.date)}</td>
+      <td data-label="Medicines">${p.meds}</td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(p.status)}">${p.status}</span></td>
+      <td data-label="Action"><div class="row-actions">
+        <button onclick="showToast('Prescription details opened','success')"><i class="fa-solid fa-eye"></i></button>
+        <button class="danger" onclick="deletePrescription('${p.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
+}
+function savePrescription(){
+  const patient = document.getElementById('pre_patient').value.trim();
+  if(!patient){ showToast('Patient name is required','error'); return; }
+  const med = document.getElementById('pre_medicine').value;
+  state.prescriptions.unshift({id:uid('RX'), patient, doctor:document.getElementById('pre_doctor').value.trim()||'Dr. Unknown', date:document.getElementById('pre_date').value||d(0), meds:med, status:'Pending'});
+  saveState(); closeModal('modalPrescription'); renderAll();
+  showToast('Prescription created successfully','success');
+}
+function deletePrescription(id){
+  confirmAction('This will delete the prescription record.', ()=>{
+    state.prescriptions = state.prescriptions.filter(p=>p.id!==id);
+    saveState(); renderAll(); showToast('Prescription deleted successfully','success');
+  });
+}
+
+/* ===================== EXPIRY ===================== */
+let expiryFilter='all';
+function renderExpiry(){
+  let list = state.medicines.map(m=>({...m, days:daysUntil(m.expiry)}));
+  if(expiryFilter==='expired') list = list.filter(m=>m.days<0);
+  else if(expiryFilter==='30') list = list.filter(m=>m.days>=0 && m.days<=30);
+  else if(expiryFilter==='60') list = list.filter(m=>m.days>=0 && m.days<=60);
+  else if(expiryFilter==='90') list = list.filter(m=>m.days>=0 && m.days<=90);
+  list.sort((a,b)=>a.days-b.days);
+  document.getElementById('expiryBody').innerHTML = list.length ? list.map(m=>{
+    let color,label;
+    if(m.days<0){color='red';label='🔴 Expired';}
+    else if(m.days<=30){color='amber';label='🟠 Urgent';}
+    else if(m.days<=90){color='amber';label='🟡 Watch';}
+    else {color='green';label='🟢 Safe';}
+    return `<tr>
+      <td data-label="Medicine"><span class="cell-main">${m.name}</span></td>
+      <td data-label="Batch">${m.batch}</td>
+      <td data-label="Quantity">${m.qty}</td>
+      <td data-label="Expiry">${fmtDate(m.expiry)}</td>
+      <td data-label="Days Remaining"><span class="badge badge-${color}">${label} · ${m.days<0?'Expired':m.days+'d'}</span></td>
+      <td data-label="Purchase Value">${inr(m.purchase*m.qty)}</td>
+      <td data-label="Action"><div class="row-actions"><button onclick="openMedicineModal('${m.id}')"><i class="fa-solid fa-pen"></i></button></div></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-circle-check"></i><h4>All clear!</h4><p>No medicines match this filter</p></div></td></tr>`;
+}
+document.getElementById('expiryFilters').addEventListener('click', e=>{
+  const btn = e.target.closest('button'); if(!btn) return;
+  document.querySelectorAll('#expiryFilters button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active'); expiryFilter = btn.dataset.f; renderExpiry();
+});
+
+/* ===================== LOW STOCK ===================== */
+function renderLowStock(){
+  const list = state.medicines.filter(m=>m.qty<=m.reorder);
+  document.getElementById('lowStockBody').innerHTML = list.length ? list.map(m=>{
+    const suggested = (m.reorder*3) - m.qty;
+    return `<tr>
+      <td data-label="Medicine"><span class="cell-main">${m.name}</span></td>
+      <td data-label="Current Stock">${m.qty}</td>
+      <td data-label="Reorder Level">${m.reorder}</td>
+      <td data-label="Supplier">${state.suppliers[0]?.company||'—'}</td>
+      <td data-label="Suggested Qty">${suggested>0?suggested:m.reorder*2}</td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(stockStatus(m))}">${stockStatus(m)}</span></td>
+      <td data-label="Action"><button class="btn btn-outline btn-sm" onclick="showToast('Purchase order created for ${m.name}','success')">Create PO</button></td>
+    </tr>`;
+  }).join('') : `<tr><td colspan="7"><div class="empty-state"><i class="fa-solid fa-circle-check"></i><h4>Stock levels are healthy</h4><p>No medicines are below reorder level</p></div></td></tr>`;
+}
+
+/* ===================== REPORTS ===================== */
+function renderReports(){
+  const totalRev = state.sales.reduce((a,s)=>a+s.amount,0);
+  const totalPurchase = state.purchases.reduce((a,p)=>a+p.amount,0);
+  const cards = [
+    {icon:'fa-chart-line', label:'Sales Report', value:inr(totalRev)},
+    {icon:'fa-truck-fast', label:'Purchase Report', value:inr(totalPurchase)},
+    {icon:'fa-boxes-stacked', label:'Inventory Report', value: state.medicines.length + ' SKUs'},
+    {icon:'fa-scale-balanced', label:'Profit & Loss', value: inr(totalRev-totalPurchase)},
+    {icon:'fa-file-invoice-dollar', label:'GST Report', value: inr(totalRev*0.12)},
+    {icon:'fa-hourglass-end', label:'Expiry Report', value: state.medicines.filter(m=>daysUntil(m.expiry)<=90).length + ' items'},
+    {icon:'fa-users', label:'Customer Report', value: state.customers.length + ' customers'},
+    {icon:'fa-handshake', label:'Supplier Report', value: state.suppliers.length + ' suppliers'},
+  ];
+  document.getElementById('reportCards').innerHTML = cards.map(c=>`
+    <div class="qa-card" style="text-align:left;padding:18px;cursor:pointer;" onclick="showToast('${c.label} generated','success')">
+      <div class="qa-icon" style="margin:0 0 10px;"><i class="fa-solid ${c.icon}"></i></div>
+      <div style="font-weight:800;font-size:14px;">${c.value}</div>
+      <div class="text-soft" style="font-size:12px;">${c.label}</div>
+    </div>`).join('');
+  drawReportChart();
+}
+function drawReportChart(){
+  const canvas = document.getElementById('reportChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio||1;
+  const w = canvas.clientWidth || canvas.parentElement.clientWidth-44;
+  const h = 220;
+  canvas.width=w*dpr; canvas.height=h*dpr; canvas.style.width=w+'px'; canvas.style.height=h+'px'; ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,w,h);
+  const months = ['Apr','May','Jun','Jul','Aug','Sep'];
+  const vals = [420000,468000,512000,489000,540000,586000];
+  const styles = getComputedStyle(document.documentElement);
+  const primary = styles.getPropertyValue('--primary').trim();
+  const gridColor = styles.getPropertyValue('--border').trim();
+  const textColor = styles.getPropertyValue('--text-soft').trim();
+  const padL=48,padR=10,padT=10,padB=26;
+  const cw=w-padL-padR, ch=h-padT-padB;
+  const maxV = Math.max(...vals)*1.15;
+  ctx.strokeStyle=gridColor; ctx.fillStyle=textColor; ctx.font='11px Inter';
+  for(let i=0;i<=4;i++){ const y=padT+ch-(ch*i/4); ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(w-padR,y);ctx.stroke(); ctx.fillText(Math.round(maxV*i/4/1000)+'k',2,y+3); }
+  const bw = cw/vals.length*0.55;
+  vals.forEach((v,i)=>{
+    const x = padL + (cw/vals.length)*i + (cw/vals.length-bw)/2;
+    const bh = (v/maxV)*ch;
+    const grad = ctx.createLinearGradient(0,padT+ch-bh,0,padT+ch);
+    grad.addColorStop(0,primary); grad.addColorStop(1,primary+'55');
+    ctx.fillStyle=grad;
+    ctx.beginPath(); ctx.roundRect(x, padT+ch-bh, bw, bh, 6); ctx.fill();
+    ctx.fillStyle=textColor; ctx.textAlign='center'; ctx.fillText(months[i], x+bw/2, h-8);
+  });
+  ctx.textAlign='left';
+}
+
+/* ===================== EMPLOYEES ===================== */
+function renderEmployees(){
+  document.getElementById('employeesBody').innerHTML = state.employees.map(e=>`
+    <tr>
+      <td data-label="Employee"><span class="cell-main">${e.name}</span></td>
+      <td data-label="Role"><span class="badge badge-blue">${e.role}</span></td>
+      <td data-label="Phone">${e.phone}</td>
+      <td data-label="Joining Date">${fmtDate(e.joining)}</td>
+      <td data-label="Sales">${inr(e.sales)}</td>
+      <td data-label="Status"><span class="badge ${statusBadgeClass(e.status==='Active'?'Active':'On Leave')}">${e.status}</span></td>
+      <td data-label="Action"><div class="row-actions">
+        <button onclick="showToast('Employee details opened','success')"><i class="fa-solid fa-eye"></i></button>
+        <button class="danger" onclick="deleteEmployee('${e.id}')"><i class="fa-solid fa-trash"></i></button>
+      </div></td>
+    </tr>`).join('');
+}
+function saveEmployee(){
+  const name = document.getElementById('emp_name').value.trim();
+  const phone = document.getElementById('emp_phone').value.trim();
+  if(!name||!phone){ showToast('Name and phone are required','error'); return; }
+  state.employees.push({id:uid('EMP'), name, role:document.getElementById('emp_role').value, phone, joining:document.getElementById('emp_joining').value||d(0), sales:0, status:'Active'});
+  saveState(); closeModal('modalEmployee'); renderAll();
+  showToast('Employee added successfully','success');
+}
+function deleteEmployee(id){
+  confirmAction('This will remove the employee record.', ()=>{
+    state.employees = state.employees.filter(e=>e.id!==id);
+    saveState(); renderAll(); showToast('Employee removed successfully','success');
+  });
+}
+
+/* ===================== SETTINGS TABS ===================== */
+document.querySelectorAll('.settings-nav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.settings-nav button').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.settings-section').forEach(s=>s.classList.remove('active'));
+    document.getElementById('sec-'+btn.dataset.sec).classList.add('active');
+  });
+});
+
+/* ===================== GLOBAL SEARCH ===================== */
+document.getElementById('globalSearch').addEventListener('keydown', e=>{
+  if(e.key==='Enter'){
+    goto('medicines');
+    document.getElementById('medSearch').value = e.target.value;
+    renderMedicines();
+  }
+});
+
+/* ===================== RENDER ALL ===================== */
+function renderAll(){
+  renderNotifications();
+  renderDashboard();
+  drawSalesChart(currentRange);
+  renderPOSResults(document.getElementById('posSearch').value);
+  renderCart();
+  renderPurchase();
+  renderInventoryStats();
+  renderInventoryTable();
+  renderMedicines();
+  renderSuppliers();
+  renderCustomers();
+  renderPrescriptions();
+  renderExpiry();
+  renderLowStock();
+  renderReports();
+  renderEmployees();
+}
+
+/* ===================== INIT ===================== */
+applyTheme();
+populateSelects();
+renderAll();
+window.addEventListener('resize', ()=>{ drawSalesChart(currentRange); drawReportChart(); });
+</script>
+</body>
+</html>
